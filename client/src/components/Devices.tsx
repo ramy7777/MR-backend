@@ -1,10 +1,16 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
+import { useAuth } from '../contexts/AuthContext';
+import AdminDevices from './AdminDevices';
+import UserDevices from './UserDevices';
 
 const Devices = () => {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
+
   return (
     <Box>
-      <Typography variant="h4">Devices Management</Typography>
+      {isAdmin ? <AdminDevices /> : <UserDevices />}
     </Box>
   );
 };
