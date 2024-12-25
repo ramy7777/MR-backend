@@ -1,5 +1,8 @@
 export declare class AuthService {
     private userRepository;
+    private dataSource;
+    constructor();
+    private initRepositories;
     register(email: string, password: string, name: string): Promise<{
         accessToken: string;
         refreshToken: string;

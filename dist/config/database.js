@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setupDatabase = exports.AppDataSource = void 0;
+exports.setupDatabase = exports.getAppDataSource = void 0;
 const typeorm_1 = require("typeorm");
 const logger_1 = require("../utils/logger");
 const User_1 = require("../entities/User");
@@ -10,6 +10,7 @@ const Rental_1 = require("../entities/Rental");
 const Session_1 = require("../entities/Session");
 const MAX_RETRIES = 5;
 const RETRY_DELAY = 5000; // 5 seconds
+const DB_URL_WAIT_TIME = 30000; // 30 seconds
 function parseDbUrl(url) {
     try {
         const matches = url.match(/^postgres(?:ql)?:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)$/);
@@ -17,6 +18,7 @@ function parseDbUrl(url) {
             throw new Error('Invalid database URL format');
         }
         const [, user, password, host, port, database] = matches;
+        const isLocalhost = host === 'localhost' || host === '127.0.0.1';
         return {
             type: 'postgres',
             host,
@@ -24,7 +26,7 @@ function parseDbUrl(url) {
             username: user,
             password,
             database,
-            ssl: { rejectUnauthorized: false },
+            ssl: !isLocalhost && process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
             synchronize: false,
             logging: false
         };
@@ -34,7 +36,21 @@ function parseDbUrl(url) {
         throw error;
     }
 }
-function getDataSourceConfig() {
+async function waitForDatabaseUrl(maxWaitTime = DB_URL_WAIT_TIME) {
+    const startTime = Date.now();
+    while (Date.now() - startTime < maxWaitTime) {
+        if (process.env.DATABASE_URL) {
+            return;
+        }
+        logger_1.logger.info('Waiting for DATABASE_URL to be set...', {
+            elapsed: Math.round((Date.now() - startTime) / 1000) + 's',
+            maxWait: Math.round(maxWaitTime / 1000) + 's'
+        });
+        await new Promise(resolve => setTimeout(resolve, 5000)); // Check every 5 seconds
+    }
+    throw new Error(`DATABASE_URL not available after ${maxWaitTime / 1000} seconds`);
+}
+async function getDataSourceConfig() {
     const isProd = process.env.NODE_ENV?.trim() === 'production';
     logger_1.logger.info('Environment variables:', {
         NODE_ENV: process.env.NODE_ENV,
@@ -45,7 +61,8 @@ function getDataSourceConfig() {
         DB_PORT: process.env.DB_PORT,
         DB_NAME: process.env.DB_NAME,
         PWD: process.env.PWD,
-        PATH: process.env.PATH?.split(':').length
+        PATH: process.env.PATH?.split(':').length,
+        env_keys: Object.keys(process.env).filter(key => !key.includes('SECRET') && !key.includes('KEY')).join(', ')
     });
     if (!isProd) {
         return {
@@ -61,6 +78,10 @@ function getDataSourceConfig() {
         };
     }
     if (!process.env.DATABASE_URL) {
+        logger_1.logger.info('DATABASE_URL not found, waiting...');
+        await waitForDatabaseUrl();
+    }
+    if (!process.env.DATABASE_URL) {
         logger_1.logger.error('Missing DATABASE_URL in production');
         throw new Error('DATABASE_URL is required in production');
     }
@@ -72,18 +93,27 @@ function getDataSourceConfig() {
     });
     return config;
 }
-const config = getDataSourceConfig();
-exports.AppDataSource = new typeorm_1.DataSource({
-    ...config,
-    entities: [User_1.User, Subscription_1.Subscription, Device_1.Device, Rental_1.Rental, Session_1.Session],
-    cache: true,
-    dropSchema: false,
-    migrationsRun: false
-});
+let dataSource = null;
+const getAppDataSource = async () => {
+    if (!dataSource) {
+        const config = await getDataSourceConfig();
+        dataSource = new typeorm_1.DataSource({
+            ...config,
+            entities: [User_1.User, Subscription_1.Subscription, Device_1.Device, Rental_1.Rental, Session_1.Session],
+            cache: true,
+            dropSchema: false,
+            migrationsRun: false
+        });
+    }
+    return dataSource;
+};
+exports.getAppDataSource = getAppDataSource;
 const setupDatabase = async (retryCount = 0) => {
     try {
-        if (!exports.AppDataSource.isInitialized) {
-            await exports.AppDataSource.initialize();
+        const ds = await (0, exports.getAppDataSource)();
+        if (!ds.isInitialized) {
+            await ds.initialize();
+            const config = ds.options;
             logger_1.logger.info('Database connection established successfully', {
                 host: config.host,
                 port: config.port,
@@ -92,6 +122,8 @@ const setupDatabase = async (retryCount = 0) => {
         }
     }
     catch (error) {
+        const ds = await (0, exports.getAppDataSource)();
+        const config = ds.options;
         logger_1.logger.error('Error connecting to database:', {
             error: {
                 code: error.code,

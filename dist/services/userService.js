@@ -6,9 +6,14 @@ const User_1 = require("../entities/User");
 const errorHandler_1 = require("../middleware/errorHandler");
 class UserService {
     constructor() {
-        this.userRepository = database_1.AppDataSource.getRepository(User_1.User);
+        this.initRepository();
+    }
+    async initRepository() {
+        const dataSource = await (0, database_1.getAppDataSource)();
+        this.userRepository = dataSource.getRepository(User_1.User);
     }
     async findById(id) {
+        await this.initRepository();
         const user = await this.userRepository.findOne({
             where: { id },
             relations: ['subscriptions', 'rentals'],
@@ -19,9 +24,11 @@ class UserService {
         return user;
     }
     async findAll(page = 1, limit = 10) {
+        await this.initRepository();
         const [users, total] = await this.userRepository.findAndCount({
             skip: (page - 1) * limit,
             take: limit,
+            relations: ['subscriptions', 'rentals'],
             order: { createdAt: 'DESC' },
         });
         return {
@@ -34,16 +41,19 @@ class UserService {
         };
     }
     async update(id, data) {
+        await this.initRepository();
         const user = await this.findById(id);
         Object.assign(user, data);
         return this.userRepository.save(user);
     }
     async delete(id) {
+        await this.initRepository();
         const user = await this.findById(id);
         user.status = 'inactive';
         return this.userRepository.save(user);
     }
     async getUserStats(userId) {
+        await this.initRepository();
         const user = await this.findById(userId);
         const stats = await this.userRepository
             .createQueryBuilder('user')

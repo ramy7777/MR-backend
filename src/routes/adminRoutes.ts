@@ -1,7 +1,7 @@
 import express from 'express';
 import { AuthService } from '../services/authService';
 import { authenticate } from '../middleware/authenticate';
-import { AppDataSource } from '../config/database';
+import { getAppDataSource } from '../config/database';
 import { User } from '../entities/User';
 import { Subscription } from '../entities/Subscription';
 import { Device } from '../entities/Device';
@@ -13,7 +13,8 @@ const authService = new AuthService();
 // Middleware to check if user is admin
 const isAdmin = async (req: any, res: any, next: any) => {
   try {
-    const userRepository = AppDataSource.getRepository(User);
+    const dataSource = await getAppDataSource();
+    const userRepository = dataSource.getRepository(User);
     const user = await userRepository.findOne({ where: { id: req.user.userId } });
     
     if (!user || user.role !== 'admin') {
@@ -33,7 +34,8 @@ router.use(isAdmin);
 // Get all devices
 router.get('/devices', async (req, res, next) => {
   try {
-    const deviceRepository = AppDataSource.getRepository(Device);
+    const dataSource = await getAppDataSource();
+    const deviceRepository = dataSource.getRepository(Device);
     const devices = await deviceRepository.find({
       order: { createdAt: 'DESC' },
     });
@@ -56,7 +58,8 @@ router.get('/devices', async (req, res, next) => {
 // Add new device
 router.post('/devices', async (req, res, next) => {
   try {
-    const deviceRepository = AppDataSource.getRepository(Device);
+    const dataSource = await getAppDataSource();
+    const deviceRepository = dataSource.getRepository(Device);
     const { serialNumber, specifications, status = 'available', condition = 'excellent' } = req.body;
 
     // Validate required fields
@@ -109,7 +112,8 @@ router.post('/devices', async (req, res, next) => {
 // Update device
 router.put('/devices/:id', async (req, res, next) => {
   try {
-    const deviceRepository = AppDataSource.getRepository(Device);
+    const dataSource = await getAppDataSource();
+    const deviceRepository = dataSource.getRepository(Device);
     const { id } = req.params;
     const { serialNumber, specifications, status, condition } = req.body;
 
@@ -165,7 +169,8 @@ router.put('/devices/:id', async (req, res, next) => {
 // Delete device
 router.delete('/devices/:id', async (req, res, next) => {
   try {
-    const deviceRepository = AppDataSource.getRepository(Device);
+    const dataSource = await getAppDataSource();
+    const deviceRepository = dataSource.getRepository(Device);
     const { id } = req.params;
     const device = await deviceRepository.findOne({
       where: { id }
@@ -198,10 +203,11 @@ router.delete('/devices/:id', async (req, res, next) => {
 // Update device status
 router.patch('/devices/:id/status', async (req, res, next) => {
   try {
+    const dataSource = await getAppDataSource();
+    const deviceRepository = dataSource.getRepository(Device);
     const { id } = req.params;
     const { status } = req.body;
     
-    const deviceRepository = AppDataSource.getRepository(Device);
     const device = await deviceRepository.findOne({ where: { id } });
     
     if (!device) {
@@ -230,7 +236,8 @@ router.patch('/devices/:id/status', async (req, res, next) => {
 // Get all subscriptions
 router.get('/subscriptions', async (req, res, next) => {
   try {
-    const subscriptionRepository = AppDataSource.getRepository(Subscription);
+    const dataSource = await getAppDataSource();
+    const subscriptionRepository = dataSource.getRepository(Subscription);
     const subscriptions = await subscriptionRepository.find({
       relations: ['user'],
       order: { createdAt: 'DESC' },
@@ -254,7 +261,8 @@ router.get('/subscriptions', async (req, res, next) => {
 // Promote user to admin
 router.post('/promote-to-admin', authenticate, async (req, res, next) => {
   try {
-    const userRepository = AppDataSource.getRepository(User);
+    const dataSource = await getAppDataSource();
+    const userRepository = dataSource.getRepository(User);
     const user = await userRepository.findOne({ where: { id: req.user.userId } });
     
     if (!user) {

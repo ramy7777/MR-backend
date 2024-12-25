@@ -4,6 +4,8 @@ export declare class SubscriptionService {
     private subscriptionRepository;
     private userRepository;
     private deviceRepository;
+    constructor();
+    private initRepositories;
     create(userId: string, data: {
         planType: 'daily' | 'weekly' | 'monthly';
         amount: number;

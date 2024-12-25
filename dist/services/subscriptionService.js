@@ -9,11 +9,16 @@ const errorHandler_1 = require("../middleware/errorHandler");
 const logger_1 = require("../utils/logger");
 class SubscriptionService {
     constructor() {
-        this.subscriptionRepository = database_1.AppDataSource.getRepository(Subscription_1.Subscription);
-        this.userRepository = database_1.AppDataSource.getRepository(User_1.User);
-        this.deviceRepository = database_1.AppDataSource.getRepository(Device_1.Device);
+        this.initRepositories();
+    }
+    async initRepositories() {
+        const dataSource = await (0, database_1.getAppDataSource)();
+        this.subscriptionRepository = dataSource.getRepository(Subscription_1.Subscription);
+        this.userRepository = dataSource.getRepository(User_1.User);
+        this.deviceRepository = dataSource.getRepository(Device_1.Device);
     }
     async create(userId, data) {
+        await this.initRepositories();
         const user = await this.userRepository.findOne({ where: { id: userId } });
         if (!user) {
             throw new errorHandler_1.AppError(404, 'User not found');
@@ -29,7 +34,8 @@ class SubscriptionService {
             throw new errorHandler_1.AppError(400, 'User already has an active subscription');
         }
         // Start a transaction to handle both subscription and device assignment
-        const queryRunner = database_1.AppDataSource.createQueryRunner();
+        const dataSource = await (0, database_1.getAppDataSource)();
+        const queryRunner = dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
@@ -92,6 +98,7 @@ class SubscriptionService {
         }
     }
     async findById(id) {
+        await this.initRepositories();
         const subscription = await this.subscriptionRepository.findOne({
             where: { id },
             relations: ['user'],
@@ -102,12 +109,14 @@ class SubscriptionService {
         return subscription;
     }
     async findByUser(userId) {
+        await this.initRepositories();
         return this.subscriptionRepository.find({
             where: { userId },
             order: { createdAt: 'DESC' },
         });
     }
     async updatePaymentStatus(id, status) {
+        await this.initRepositories();
         const subscription = await this.findById(id);
         const oldStatus = subscription.paymentStatus;
         subscription.paymentStatus = status;
@@ -131,6 +140,7 @@ class SubscriptionService {
         return this.subscriptionRepository.save(subscription);
     }
     async cancel(id) {
+        await this.initRepositories();
         const subscription = await this.findById(id);
         subscription.status = 'cancelled';
         // Release assigned devices on cancellation
@@ -150,12 +160,14 @@ class SubscriptionService {
         return this.subscriptionRepository.save(subscription);
     }
     async renewSubscription(id) {
+        await this.initRepositories();
         const oldSubscription = await this.findById(id);
         if (oldSubscription.status !== 'expired') {
             throw new errorHandler_1.AppError(400, 'Can only renew expired subscriptions');
         }
         // Start a transaction for renewal and device assignment
-        const queryRunner = database_1.AppDataSource.createQueryRunner();
+        const dataSource = await (0, database_1.getAppDataSource)();
+        const queryRunner = dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {

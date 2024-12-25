@@ -6,13 +6,19 @@ const Device_1 = require("../entities/Device");
 const errorHandler_1 = require("../middleware/errorHandler");
 class DeviceService {
     constructor() {
-        this.deviceRepository = database_1.AppDataSource.getRepository(Device_1.Device);
+        this.initRepository();
+    }
+    async initRepository() {
+        const dataSource = await (0, database_1.getAppDataSource)();
+        this.deviceRepository = dataSource.getRepository(Device_1.Device);
     }
     async create(data) {
+        await this.initRepository();
         const device = this.deviceRepository.create(data);
         return this.deviceRepository.save(device);
     }
     async findById(id) {
+        await this.initRepository();
         const device = await this.deviceRepository.findOne({
             where: { id },
             relations: ['rentals', 'sessions'],
@@ -23,6 +29,7 @@ class DeviceService {
         return device;
     }
     async findAll(page = 1, limit = 10, status) {
+        await this.initRepository();
         const queryBuilder = this.deviceRepository.createQueryBuilder('device');
         if (status) {
             queryBuilder.where('device.status = :status', { status });
@@ -41,16 +48,19 @@ class DeviceService {
         };
     }
     async update(id, data) {
+        await this.initRepository();
         const device = await this.findById(id);
         Object.assign(device, data);
         return this.deviceRepository.save(device);
     }
     async updateStatus(id, status) {
+        await this.initRepository();
         const device = await this.findById(id);
         device.status = status;
         return this.deviceRepository.save(device);
     }
     async getDeviceStats(id) {
+        await this.initRepository();
         const device = await this.deviceRepository
             .createQueryBuilder('device')
             .leftJoinAndSelect('device.rentals', 'rental')
@@ -77,6 +87,7 @@ class DeviceService {
         };
     }
     async scheduleMaintenanceCheck(id, date) {
+        await this.initRepository();
         const device = await this.findById(id);
         device.status = 'maintenance';
         device.lastMaintenance = date;

@@ -1,9 +1,5 @@
 import 'reflect-metadata';
-import * as dotenv from 'dotenv';
-
-// Load environment variables first
-dotenv.config();
-
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -24,6 +20,7 @@ logger.info('Starting application with environment:', {
   PORT: process.env.PORT,
 });
 
+// Create Express app
 const app = express();
 
 // Middleware
@@ -73,10 +70,9 @@ const startServer = async () => {
       PORT: port
     });
 
-    // Initialize database
+    // Initialize database with retries
     await setupDatabase();
 
-    // Start server
     app.listen(port, () => {
       logger.info(`Server is running on port ${port}`);
       logger.info(`Environment: ${process.env.NODE_ENV}`);
@@ -94,8 +90,8 @@ process.on('uncaughtException', (error) => {
 });
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (error) => {
-  logger.error('Unhandled Rejection:', error);
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
   process.exit(1);
 });
 

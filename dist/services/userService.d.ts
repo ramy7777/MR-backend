@@ -1,6 +1,8 @@
 import { User } from '../entities/User';
 export declare class UserService {
     private userRepository;
+    constructor();
+    private initRepository;
     findById(id: string): Promise<User>;
     findAll(page?: number, limit?: number): Promise<{
         users: User[];

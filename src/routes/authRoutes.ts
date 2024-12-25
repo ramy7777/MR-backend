@@ -2,7 +2,7 @@ import express from 'express';
 import { AuthController } from '../controllers/authController';
 import { AuthService } from '../services/authService';
 import { authenticate } from '../middleware/authenticate';
-import { AppDataSource } from '../config/database';
+import { getAppDataSource } from '../config/database';
 import { User } from '../entities/User';
 import { logger } from '../utils/logger';
 
@@ -16,7 +16,8 @@ router.post('/login', authController.login);
 router.get('/me', authenticate, async (req, res, next) => {
   try {
     logger.info('Getting user info', { userId: req.user.userId });
-    const userRepository = AppDataSource.getRepository(User);
+    const dataSource = await getAppDataSource();
+    const userRepository = dataSource.getRepository(User);
     const user = await userRepository.findOne({ where: { id: req.user.userId } });
     
     if (!user) {

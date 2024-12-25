@@ -18,7 +18,8 @@ router.post('/login', authController.login);
 router.get('/me', authenticate_1.authenticate, async (req, res, next) => {
     try {
         logger_1.logger.info('Getting user info', { userId: req.user.userId });
-        const userRepository = database_1.AppDataSource.getRepository(User_1.User);
+        const dataSource = await (0, database_1.getAppDataSource)();
+        const userRepository = dataSource.getRepository(User_1.User);
         const user = await userRepository.findOne({ where: { id: req.user.userId } });
         if (!user) {
             logger_1.logger.error('User not found', { userId: req.user.userId });

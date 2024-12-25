@@ -16,7 +16,8 @@ const authService = new authService_1.AuthService();
 // Middleware to check if user is admin
 const isAdmin = async (req, res, next) => {
     try {
-        const userRepository = database_1.AppDataSource.getRepository(User_1.User);
+        const dataSource = await (0, database_1.getAppDataSource)();
+        const userRepository = dataSource.getRepository(User_1.User);
         const user = await userRepository.findOne({ where: { id: req.user.userId } });
         if (!user || user.role !== 'admin') {
             return res.status(403).json({ status: 'error', message: 'Admin access required' });
@@ -33,7 +34,8 @@ router.use(isAdmin);
 // Get all devices
 router.get('/devices', async (req, res, next) => {
     try {
-        const deviceRepository = database_1.AppDataSource.getRepository(Device_1.Device);
+        const dataSource = await (0, database_1.getAppDataSource)();
+        const deviceRepository = dataSource.getRepository(Device_1.Device);
         const devices = await deviceRepository.find({
             order: { createdAt: 'DESC' },
         });
@@ -54,7 +56,8 @@ router.get('/devices', async (req, res, next) => {
 // Add new device
 router.post('/devices', async (req, res, next) => {
     try {
-        const deviceRepository = database_1.AppDataSource.getRepository(Device_1.Device);
+        const dataSource = await (0, database_1.getAppDataSource)();
+        const deviceRepository = dataSource.getRepository(Device_1.Device);
         const { serialNumber, specifications, status = 'available', condition = 'excellent' } = req.body;
         // Validate required fields
         if (!serialNumber) {
@@ -100,7 +103,8 @@ router.post('/devices', async (req, res, next) => {
 // Update device
 router.put('/devices/:id', async (req, res, next) => {
     try {
-        const deviceRepository = database_1.AppDataSource.getRepository(Device_1.Device);
+        const dataSource = await (0, database_1.getAppDataSource)();
+        const deviceRepository = dataSource.getRepository(Device_1.Device);
         const { id } = req.params;
         const { serialNumber, specifications, status, condition } = req.body;
         const device = await deviceRepository.findOne({
@@ -148,7 +152,8 @@ router.put('/devices/:id', async (req, res, next) => {
 // Delete device
 router.delete('/devices/:id', async (req, res, next) => {
     try {
-        const deviceRepository = database_1.AppDataSource.getRepository(Device_1.Device);
+        const dataSource = await (0, database_1.getAppDataSource)();
+        const deviceRepository = dataSource.getRepository(Device_1.Device);
         const { id } = req.params;
         const device = await deviceRepository.findOne({
             where: { id }
@@ -177,9 +182,10 @@ router.delete('/devices/:id', async (req, res, next) => {
 // Update device status
 router.patch('/devices/:id/status', async (req, res, next) => {
     try {
+        const dataSource = await (0, database_1.getAppDataSource)();
+        const deviceRepository = dataSource.getRepository(Device_1.Device);
         const { id } = req.params;
         const { status } = req.body;
-        const deviceRepository = database_1.AppDataSource.getRepository(Device_1.Device);
         const device = await deviceRepository.findOne({ where: { id } });
         if (!device) {
             return res.status(404).json({ status: 'error', message: 'Device not found' });
@@ -204,7 +210,8 @@ router.patch('/devices/:id/status', async (req, res, next) => {
 // Get all subscriptions
 router.get('/subscriptions', async (req, res, next) => {
     try {
-        const subscriptionRepository = database_1.AppDataSource.getRepository(Subscription_1.Subscription);
+        const dataSource = await (0, database_1.getAppDataSource)();
+        const subscriptionRepository = dataSource.getRepository(Subscription_1.Subscription);
         const subscriptions = await subscriptionRepository.find({
             relations: ['user'],
             order: { createdAt: 'DESC' },
@@ -226,7 +233,8 @@ router.get('/subscriptions', async (req, res, next) => {
 // Promote user to admin
 router.post('/promote-to-admin', authenticate_1.authenticate, async (req, res, next) => {
     try {
-        const userRepository = database_1.AppDataSource.getRepository(User_1.User);
+        const dataSource = await (0, database_1.getAppDataSource)();
+        const userRepository = dataSource.getRepository(User_1.User);
         const user = await userRepository.findOne({ where: { id: req.user.userId } });
         if (!user) {
             return res.status(404).json({ status: 'error', message: 'User not found' });

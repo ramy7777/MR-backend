@@ -1,11 +1,22 @@
-import { AppDataSource } from '../config/database';
+import { getAppDataSource } from '../config/database';
 import { User } from '../entities/User';
 import { AppError } from '../middleware/errorHandler';
+import { Repository } from 'typeorm';
 
 export class UserService {
-  private userRepository = AppDataSource.getRepository(User);
+  private userRepository: Repository<User>;
+
+  constructor() {
+    this.initRepository();
+  }
+
+  private async initRepository() {
+    const dataSource = await getAppDataSource();
+    this.userRepository = dataSource.getRepository(User);
+  }
 
   async findById(id: string) {
+    await this.initRepository();
     const user = await this.userRepository.findOne({
       where: { id },
       relations: ['subscriptions', 'rentals'],
@@ -17,9 +28,11 @@ export class UserService {
   }
 
   async findAll(page = 1, limit = 10) {
+    await this.initRepository();
     const [users, total] = await this.userRepository.findAndCount({
       skip: (page - 1) * limit,
       take: limit,
+      relations: ['subscriptions', 'rentals'],
       order: { createdAt: 'DESC' },
     });
 
@@ -34,18 +47,21 @@ export class UserService {
   }
 
   async update(id: string, data: Partial<User>) {
+    await this.initRepository();
     const user = await this.findById(id);
     Object.assign(user, data);
     return this.userRepository.save(user);
   }
 
   async delete(id: string) {
+    await this.initRepository();
     const user = await this.findById(id);
     user.status = 'inactive';
     return this.userRepository.save(user);
   }
 
   async getUserStats(userId: string) {
+    await this.initRepository();
     const user = await this.findById(userId);
     const stats = await this.userRepository
       .createQueryBuilder('user')

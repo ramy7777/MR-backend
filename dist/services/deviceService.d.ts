@@ -1,6 +1,8 @@
 import { Device } from '../entities/Device';
 export declare class DeviceService {
     private deviceRepository;
+    constructor();
+    private initRepository;
     create(data: Partial<Device>): Promise<Device>;
     findById(id: string): Promise<Device>;
     findAll(page?: number, limit?: number, status?: Device['status']): Promise<{

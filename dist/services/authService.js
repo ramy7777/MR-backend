@@ -12,9 +12,14 @@ const jwt_1 = require("../utils/jwt");
 const logger_1 = require("../utils/logger");
 class AuthService {
     constructor() {
-        this.userRepository = database_1.AppDataSource.getRepository(User_1.User);
+        this.initRepositories();
+    }
+    async initRepositories() {
+        this.dataSource = await (0, database_1.getAppDataSource)();
+        this.userRepository = this.dataSource.getRepository(User_1.User);
     }
     async register(email, password, name) {
+        await this.initRepositories();
         const existingUser = await this.userRepository.findOne({ where: { email } });
         if (existingUser) {
             throw new errorHandler_1.AppError(400, 'Email already registered');
@@ -45,6 +50,7 @@ class AuthService {
     }
     async login(email, password) {
         logger_1.logger.info('Login attempt:', { email });
+        await this.initRepositories();
         const user = await this.userRepository.findOne({ where: { email } });
         if (!user) {
             logger_1.logger.warn('Login failed - user not found:', { email });

@@ -26,6 +26,5 @@ services:
 
 databases:
   - name: mr-platform-db
-    databaseName: mr_platform
     plan: free
     ipAllowList: [] # only allow internal connections

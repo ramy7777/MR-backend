@@ -1,19 +1,32 @@
-import { AppDataSource } from '../config/database';
+import { getAppDataSource } from '../config/database';
 import { Subscription } from '../entities/Subscription';
 import { User } from '../entities/User';
 import { Device } from '../entities/Device';
 import { AppError } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
+import { Repository } from 'typeorm';
 
 export class SubscriptionService {
-  private subscriptionRepository = AppDataSource.getRepository(Subscription);
-  private userRepository = AppDataSource.getRepository(User);
-  private deviceRepository = AppDataSource.getRepository(Device);
+  private subscriptionRepository: Repository<Subscription>;
+  private userRepository: Repository<User>;
+  private deviceRepository: Repository<Device>;
+
+  constructor() {
+    this.initRepositories();
+  }
+
+  private async initRepositories() {
+    const dataSource = await getAppDataSource();
+    this.subscriptionRepository = dataSource.getRepository(Subscription);
+    this.userRepository = dataSource.getRepository(User);
+    this.deviceRepository = dataSource.getRepository(Device);
+  }
 
   async create(userId: string, data: {
     planType: 'daily' | 'weekly' | 'monthly';
     amount: number;
   }) {
+    await this.initRepositories();
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new AppError(404, 'User not found');
@@ -32,7 +45,8 @@ export class SubscriptionService {
     }
 
     // Start a transaction to handle both subscription and device assignment
-    const queryRunner = AppDataSource.createQueryRunner();
+    const dataSource = await getAppDataSource();
+    const queryRunner = dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
@@ -103,6 +117,7 @@ export class SubscriptionService {
   }
 
   async findById(id: string) {
+    await this.initRepositories();
     const subscription = await this.subscriptionRepository.findOne({
       where: { id },
       relations: ['user'],
@@ -114,6 +129,7 @@ export class SubscriptionService {
   }
 
   async findByUser(userId: string) {
+    await this.initRepositories();
     return this.subscriptionRepository.find({
       where: { userId },
       order: { createdAt: 'DESC' },
@@ -121,6 +137,7 @@ export class SubscriptionService {
   }
 
   async updatePaymentStatus(id: string, status: 'paid' | 'failed') {
+    await this.initRepositories();
     const subscription = await this.findById(id);
     const oldStatus = subscription.paymentStatus;
     subscription.paymentStatus = status;
@@ -150,6 +167,7 @@ export class SubscriptionService {
   }
 
   async cancel(id: string) {
+    await this.initRepositories();
     const subscription = await this.findById(id);
     subscription.status = 'cancelled';
 
@@ -174,6 +192,7 @@ export class SubscriptionService {
   }
 
   async renewSubscription(id: string) {
+    await this.initRepositories();
     const oldSubscription = await this.findById(id);
     
     if (oldSubscription.status !== 'expired') {
@@ -181,7 +200,8 @@ export class SubscriptionService {
     }
 
     // Start a transaction for renewal and device assignment
-    const queryRunner = AppDataSource.createQueryRunner();
+    const dataSource = await getAppDataSource();
+    const queryRunner = dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 

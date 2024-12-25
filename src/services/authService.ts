@@ -1,14 +1,26 @@
 import bcrypt from 'bcryptjs';
-import { AppDataSource } from '../config/database';
+import { getAppDataSource } from '../config/database';
 import { User } from '../entities/User';
 import { AppError } from '../middleware/errorHandler';
 import { generateToken, generateRefreshToken } from '../utils/jwt';
 import { logger } from '../utils/logger';
+import { Repository } from 'typeorm';
 
 export class AuthService {
-  private userRepository = AppDataSource.getRepository(User);
+  private userRepository: Repository<User>;
+  private dataSource: any;
+
+  constructor() {
+    this.initRepositories();
+  }
+
+  private async initRepositories() {
+    this.dataSource = await getAppDataSource();
+    this.userRepository = this.dataSource.getRepository(User);
+  }
 
   async register(email: string, password: string, name: string) {
+    await this.initRepositories();
     const existingUser = await this.userRepository.findOne({ where: { email } });
     if (existingUser) {
       throw new AppError(400, 'Email already registered');
@@ -44,6 +56,7 @@ export class AuthService {
 
   async login(email: string, password: string) {
     logger.info('Login attempt:', { email });
+    await this.initRepositories();
     const user = await this.userRepository.findOne({ where: { email } });
     
     if (!user) {

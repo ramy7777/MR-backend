@@ -8,6 +8,7 @@ import { Session } from '../entities/Session';
 
 const MAX_RETRIES = 5;
 const RETRY_DELAY = 5000; // 5 seconds
+const DB_URL_WAIT_TIME = 30000; // 30 seconds
 
 type PostgresConfig = {
   type: 'postgres';
@@ -32,6 +33,7 @@ function parseDbUrl(url: string): PostgresConfig {
       throw new Error('Invalid database URL format');
     }
     const [, user, password, host, port, database] = matches;
+    const isLocalhost = host === 'localhost' || host === '127.0.0.1';
     return {
       type: 'postgres',
       host,
@@ -39,7 +41,7 @@ function parseDbUrl(url: string): PostgresConfig {
       username: user,
       password,
       database,
-      ssl: { rejectUnauthorized: false },
+      ssl: !isLocalhost && process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
       synchronize: false,
       logging: false
     };
@@ -49,7 +51,24 @@ function parseDbUrl(url: string): PostgresConfig {
   }
 }
 
-function getDataSourceConfig(): PostgresConfig {
+async function waitForDatabaseUrl(maxWaitTime: number = DB_URL_WAIT_TIME): Promise<void> {
+  const startTime = Date.now();
+  
+  while (Date.now() - startTime < maxWaitTime) {
+    if (process.env.DATABASE_URL) {
+      return;
+    }
+    logger.info('Waiting for DATABASE_URL to be set...', {
+      elapsed: Math.round((Date.now() - startTime) / 1000) + 's',
+      maxWait: Math.round(maxWaitTime / 1000) + 's'
+    });
+    await new Promise(resolve => setTimeout(resolve, 5000)); // Check every 5 seconds
+  }
+  
+  throw new Error(`DATABASE_URL not available after ${maxWaitTime / 1000} seconds`);
+}
+
+async function getDataSourceConfig(): Promise<PostgresConfig> {
   const isProd = process.env.NODE_ENV?.trim() === 'production';
   logger.info('Environment variables:', {
     NODE_ENV: process.env.NODE_ENV,
@@ -60,7 +79,8 @@ function getDataSourceConfig(): PostgresConfig {
     DB_PORT: process.env.DB_PORT,
     DB_NAME: process.env.DB_NAME,
     PWD: process.env.PWD,
-    PATH: process.env.PATH?.split(':').length
+    PATH: process.env.PATH?.split(':').length,
+    env_keys: Object.keys(process.env).filter(key => !key.includes('SECRET') && !key.includes('KEY')).join(', ')
   });
 
   if (!isProd) {
@@ -75,6 +95,11 @@ function getDataSourceConfig(): PostgresConfig {
       logging: true,
       ssl: false
     };
+  }
+
+  if (!process.env.DATABASE_URL) {
+    logger.info('DATABASE_URL not found, waiting...');
+    await waitForDatabaseUrl();
   }
 
   if (!process.env.DATABASE_URL) {
@@ -93,20 +118,29 @@ function getDataSourceConfig(): PostgresConfig {
   return config;
 }
 
-const config = getDataSourceConfig();
+let dataSource: DataSource | null = null;
 
-export const AppDataSource = new DataSource({
-  ...config,
-  entities: [User, Subscription, Device, Rental, Session],
-  cache: true,
-  dropSchema: false,
-  migrationsRun: false
-} as DataSourceOptions);
+export const getAppDataSource = async (): Promise<DataSource> => {
+  if (!dataSource) {
+    const config = await getDataSourceConfig();
+    dataSource = new DataSource({
+      ...config,
+      entities: [User, Subscription, Device, Rental, Session],
+      cache: true,
+      dropSchema: false,
+      migrationsRun: false
+    });
+  }
+  return dataSource;
+};
 
 export const setupDatabase = async (retryCount = 0): Promise<void> => {
   try {
-    if (!AppDataSource.isInitialized) {
-      await AppDataSource.initialize();
+    const ds = await getAppDataSource();
+    
+    if (!ds.isInitialized) {
+      await ds.initialize();
+      const config = ds.options as PostgresConfig;
       logger.info('Database connection established successfully', {
         host: config.host,
         port: config.port,
@@ -114,6 +148,8 @@ export const setupDatabase = async (retryCount = 0): Promise<void> => {
       });
     }
   } catch (error: any) {
+    const ds = await getAppDataSource();
+    const config = ds.options as PostgresConfig;
     logger.error('Error connecting to database:', {
       error: {
         code: error.code,
