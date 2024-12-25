@@ -453,3 +453,8 @@
 {"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-25T17:05:24.654Z"}
 {"level":"info","message":"Environment: development","timestamp":"2024-12-25T17:05:24.655Z"}
 {"level":"info","message":"Database host: localhost","timestamp":"2024-12-25T17:05:24.655Z"}
+{"database":"mr_platform","host":"localhost","level":"info","logging":true,"message":"Database configuration:","password":"***","port":5432,"ssl":false,"synchronize":true,"timestamp":"2024-12-25T17:17:50.119Z","type":"postgres","username":"postgres"}
+{"DB_HOST":"localhost","NODE_ENV":"development","PORT":"3001","level":"info","message":"Starting server with configuration:","timestamp":"2024-12-25T17:17:50.389Z"}
+{"database":"mr_platform","host":"localhost","level":"info","message":"Database connection established successfully","port":5432,"timestamp":"2024-12-25T17:17:50.499Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-25T17:17:50.501Z"}
+{"level":"info","message":"Environment: development","timestamp":"2024-12-25T17:17:50.501Z"}

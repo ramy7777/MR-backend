@@ -43,24 +43,32 @@ function parseDbUrl(url: string): Partial<PostgresConfig> {
 
 function getDataSourceConfig(): PostgresConfig {
   const isProd = process.env.NODE_ENV === 'production';
-  const config: PostgresConfig = isProd && process.env.DATABASE_URL
-    ? {
-        ...parseDbUrl(process.env.DATABASE_URL),
-        type: 'postgres',
-        synchronize: false,
-        logging: false
-      } as PostgresConfig
-    : {
-        type: 'postgres',
-        host: process.env.DB_HOST || 'localhost',
-        port: parseInt(process.env.DB_PORT || '5432'),
-        username: process.env.DB_USER || 'postgres',
-        password: process.env.DB_PASSWORD || 'postgres',
-        database: process.env.DB_NAME || 'mr_platform',
-        synchronize: true,
-        logging: true,
-        ssl: false
-      };
+  logger.info('Environment:', { NODE_ENV: process.env.NODE_ENV, isProd });
+
+  if (!isProd) {
+    return {
+      type: 'postgres',
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '5432'),
+      username: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      database: process.env.DB_NAME || 'mr_platform',
+      synchronize: true,
+      logging: true,
+      ssl: false
+    };
+  }
+
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL is required in production');
+  }
+
+  const config: PostgresConfig = {
+    ...parseDbUrl(process.env.DATABASE_URL),
+    type: 'postgres',
+    synchronize: false,
+    logging: false
+  };
 
   const { password: _, ...loggableConfig } = config;
   logger.info('Database configuration:', {

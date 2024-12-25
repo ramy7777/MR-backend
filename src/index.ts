@@ -1,8 +1,12 @@
 import 'reflect-metadata';
+import * as dotenv from 'dotenv';
+
+// Load environment variables first
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
 import { setupDatabase } from './config/database';
 import { errorHandler } from './middleware/errorHandler';
 import { logger } from './utils/logger';
@@ -13,7 +17,12 @@ import rentalRoutes from './routes/rentalRoutes';
 import subscriptionRoutes from './routes/subscriptionRoutes';
 import adminRoutes from './routes/adminRoutes';
 
-dotenv.config();
+// Log environment on startup
+logger.info('Starting application with environment:', {
+  NODE_ENV: process.env.NODE_ENV,
+  DATABASE_URL: process.env.DATABASE_URL ? '[REDACTED]' : undefined,
+  PORT: process.env.PORT,
+});
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -25,7 +34,11 @@ app.use(express.json());
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.status(200).json({ 
+    status: 'ok', 
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString() 
+  });
 });
 
 // Debug endpoint (only in development)
@@ -34,7 +47,7 @@ if (process.env.NODE_ENV !== 'production') {
     res.json({
       NODE_ENV: process.env.NODE_ENV,
       PORT: process.env.PORT,
-      DATABASE_URL: process.env.DATABASE_URL ? '***' : undefined,
+      DATABASE_URL: process.env.DATABASE_URL ? '[REDACTED]' : undefined,
       DB_HOST: process.env.DB_HOST,
       DB_PORT: process.env.DB_PORT,
       DB_NAME: process.env.DB_NAME,
@@ -55,14 +68,6 @@ app.use(errorHandler);
 
 const startServer = async () => {
   try {
-    // Log environment
-    logger.info('Starting server with configuration:', {
-      NODE_ENV: process.env.NODE_ENV,
-      PORT: port,
-      DATABASE_URL: process.env.DATABASE_URL ? '***' : undefined,
-      DB_HOST: process.env.DB_HOST,
-    });
-
     // Initialize database
     await setupDatabase();
 
