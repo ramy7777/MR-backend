@@ -32,14 +32,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Check if user is logged in on mount
-    const token = localStorage.getItem('token');
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      // TODO: Implement token validation endpoint
+  const validateToken = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const response = await axios.get('http://localhost:3001/api/auth/me');
+        setUser(response.data.data.user);
+      }
+    } catch (err) {
+      console.error('Token validation failed:', err);
+      localStorage.removeItem('token');
+      delete axios.defaults.headers.common['Authorization'];
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
+  };
+
+  useEffect(() => {
+    validateToken();
   }, []);
 
   const login = async (email: string, password: string) => {

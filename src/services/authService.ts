@@ -13,13 +13,17 @@ export class AuthService {
       throw new AppError(400, 'Email already registered');
     }
 
+    // Check if this is the first user
+    const userCount = await this.userRepository.count();
+    const isFirstUser = userCount === 0;
+
     const passwordHash = await bcrypt.hash(password, 10);
     const user = this.userRepository.create({
       email,
       passwordHash,
       name,
       status: 'active',
-      role: 'user'
+      role: isFirstUser ? 'admin' : 'user' // First user gets admin role
     });
 
     await this.userRepository.save(user);
