@@ -35,8 +35,18 @@ function parseDbUrl(url) {
     }
 }
 function getDataSourceConfig() {
-    const isProd = process.env.NODE_ENV === 'production';
-    logger_1.logger.info('Environment:', { NODE_ENV: process.env.NODE_ENV, isProd });
+    const isProd = process.env.NODE_ENV?.trim() === 'production';
+    logger_1.logger.info('Environment variables:', {
+        NODE_ENV: process.env.NODE_ENV,
+        NODE_ENV_TRIMMED: process.env.NODE_ENV?.trim(),
+        isProd,
+        DATABASE_URL: process.env.DATABASE_URL ? '[REDACTED]' : undefined,
+        DB_HOST: process.env.DB_HOST,
+        DB_PORT: process.env.DB_PORT,
+        DB_NAME: process.env.DB_NAME,
+        PWD: process.env.PWD,
+        PATH: process.env.PATH?.split(':').length
+    });
     if (!isProd) {
         return {
             type: 'postgres',
@@ -51,6 +61,7 @@ function getDataSourceConfig() {
         };
     }
     if (!process.env.DATABASE_URL) {
+        logger_1.logger.error('Missing DATABASE_URL in production');
         throw new Error('DATABASE_URL is required in production');
     }
     const config = parseDbUrl(process.env.DATABASE_URL);

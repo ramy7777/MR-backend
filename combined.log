@@ -458,3 +458,27 @@
 {"database":"mr_platform","host":"localhost","level":"info","message":"Database connection established successfully","port":5432,"timestamp":"2024-12-25T17:17:50.499Z"}
 {"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-25T17:17:50.501Z"}
 {"level":"info","message":"Environment: development","timestamp":"2024-12-25T17:17:50.501Z"}
+{"NODE_ENV":"development","isProd":false,"level":"info","message":"Environment:","timestamp":"2024-12-25T17:28:56.797Z"}
+{"NODE_ENV":"development","PORT":"3001","level":"info","message":"Starting application with environment:","timestamp":"2024-12-25T17:28:57.060Z"}
+{"database":"mr_platform","host":"localhost","level":"info","message":"Database connection established successfully","port":5432,"timestamp":"2024-12-25T17:28:57.168Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-25T17:28:57.170Z"}
+{"level":"info","message":"Environment: development","timestamp":"2024-12-25T17:28:57.170Z"}
+{"DB_HOST":"localhost","DB_NAME":"mr_platform","DB_PORT":"5432","NODE_ENV":"development","PATH":43,"isProd":false,"level":"info","message":"Environment variables:","timestamp":"2024-12-25T17:32:54.121Z"}
+{"NODE_ENV":"development","PORT":"3001","level":"info","message":"Starting application with environment:","timestamp":"2024-12-25T17:32:54.404Z"}
+{"database":"mr_platform","host":"localhost","level":"info","message":"Database connection established successfully","port":5432,"timestamp":"2024-12-25T17:32:54.523Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-25T17:32:54.525Z"}
+{"level":"info","message":"Environment: development","timestamp":"2024-12-25T17:32:54.525Z"}
+{"DB_HOST":"localhost","DB_NAME":"mr_platform","DB_PORT":"5432","NODE_ENV":"production ","PATH":36,"isProd":false,"level":"info","message":"Environment variables:","timestamp":"2024-12-25T17:33:48.760Z"}
+{"NODE_ENV":"production ","PORT":"3001","level":"info","message":"Starting application with environment:","timestamp":"2024-12-25T17:33:48.829Z"}
+{"database":"mr_platform","host":"localhost","level":"info","message":"Database connection established successfully","port":5432,"timestamp":"2024-12-25T17:33:48.989Z"}
+{"DB_HOST":"localhost","DB_NAME":"mr_platform","DB_PORT":"5432","NODE_ENV":"development","NODE_ENV_TRIMMED":"development","PATH":43,"isProd":false,"level":"info","message":"Environment variables:","timestamp":"2024-12-25T17:34:03.266Z"}
+{"NODE_ENV":"development","PORT":"3001","level":"info","message":"Starting application with environment:","timestamp":"2024-12-25T17:34:03.545Z"}
+{"database":"mr_platform","host":"localhost","level":"info","message":"Database connection established successfully","port":5432,"timestamp":"2024-12-25T17:34:03.760Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-25T17:34:03.762Z"}
+{"level":"info","message":"Environment: development","timestamp":"2024-12-25T17:34:03.762Z"}
+{"DB_HOST":"localhost","DB_NAME":"mr_platform","DB_PORT":"5432","NODE_ENV":"development","NODE_ENV_TRIMMED":"development","PATH":43,"isProd":false,"level":"info","message":"Environment variables:","timestamp":"2024-12-25T17:34:11.476Z"}
+{"NODE_ENV":"development","PORT":"3001","level":"info","message":"Starting application with environment:","timestamp":"2024-12-25T17:34:11.766Z"}
+{"NODE_ENV":"development","PORT":"3001","level":"info","message":"Starting application with environment:","timestamp":"2024-12-25T17:34:11.769Z"}
+{"database":"mr_platform","host":"localhost","level":"info","message":"Database connection established successfully","port":5432,"timestamp":"2024-12-25T17:34:11.891Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-25T17:34:11.893Z"}
+{"level":"info","message":"Environment: development","timestamp":"2024-12-25T17:34:11.893Z"}

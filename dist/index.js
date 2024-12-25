@@ -59,7 +59,6 @@ logger_1.logger.info('Starting application with environment:', {
     PORT: process.env.PORT,
 });
 const app = (0, express_1.default)();
-const port = process.env.PORT || 3001;
 // Middleware
 app.use((0, cors_1.default)());
 app.use((0, helmet_1.default)());
@@ -96,6 +95,11 @@ app.use('/api/admin', adminRoutes_1.default);
 app.use(errorHandler_1.errorHandler);
 const startServer = async () => {
     try {
+        const port = process.env.PORT || 3001;
+        logger_1.logger.info('Starting application with environment:', {
+            NODE_ENV: process.env.NODE_ENV,
+            PORT: port
+        });
         // Initialize database
         await (0, database_1.setupDatabase)();
         // Start server

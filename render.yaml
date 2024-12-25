@@ -21,6 +21,8 @@ services:
         value: 7d
       - key: LOG_LEVEL
         value: info
+    dependsOn:
+      - mr-platform-db
 
 databases:
   - name: mr-platform-db
