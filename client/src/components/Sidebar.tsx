@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Drawer,
@@ -21,7 +21,7 @@ interface SidebarProps {
   open: boolean;
 }
 
-const getMenuItems = (role: string) => [
+const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/', requiredRole: null },
   { text: 'Users', icon: <PeopleIcon />, path: '/users', requiredRole: 'admin' },
   { text: 'Devices', icon: <DevicesIcon />, path: '/devices', requiredRole: null },
@@ -31,7 +31,19 @@ const getMenuItems = (role: string) => [
 const Sidebar: React.FC<SidebarProps> = ({ open }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const menuItems = getMenuItems(user?.role || '');
+
+  useEffect(() => {
+    console.log('Current user in Sidebar:', user);
+  }, [user]);
+
+  const filteredItems = menuItems.filter(item => {
+    console.log('Checking item:', item.text);
+    console.log('Required role:', item.requiredRole);
+    console.log('User role:', user?.role);
+    return !item.requiredRole || user?.role === item.requiredRole;
+  });
+
+  console.log('Filtered menu items:', filteredItems);
 
   return (
     <Drawer
@@ -61,16 +73,14 @@ const Sidebar: React.FC<SidebarProps> = ({ open }) => {
       }}
     >
       <List sx={{ marginTop: 8 }}>
-        {menuItems
-          .filter(item => !item.requiredRole || item.requiredRole === user?.role)
-          .map((item) => (
-            <ListItem key={item.text} disablePadding>
-              <ListItemButton onClick={() => navigate(item.path)}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+        {filteredItems.map((item) => (
+          <ListItem key={item.text} disablePadding>
+            <ListItemButton onClick={() => navigate(item.path)}>
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
       </List>
       <Divider />
     </Drawer>

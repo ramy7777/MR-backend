@@ -3,6 +3,7 @@ import { AppDataSource } from '../config/database';
 import { User } from '../entities/User';
 import { AppError } from '../middleware/errorHandler';
 import { generateToken, generateRefreshToken } from '../utils/jwt';
+import { logger } from '../utils/logger';
 
 export class AuthService {
   private userRepository = AppDataSource.getRepository(User);
@@ -27,32 +28,70 @@ export class AuthService {
     });
 
     await this.userRepository.save(user);
+    logger.info('User registered:', { id: user.id, email: user.email, role: user.role });
 
     const tokens = this.generateAuthTokens(user);
-    return { user, ...tokens };
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role
+      },
+      ...tokens
+    };
   }
 
   async login(email: string, password: string) {
+    logger.info('Login attempt:', { email });
     const user = await this.userRepository.findOne({ where: { email } });
+    
     if (!user) {
+      logger.warn('Login failed - user not found:', { email });
       throw new AppError(401, 'Invalid credentials');
     }
 
     const isValidPassword = await bcrypt.compare(password, user.passwordHash);
     if (!isValidPassword) {
+      logger.warn('Login failed - invalid password:', { email });
       throw new AppError(401, 'Invalid credentials');
     }
 
+    logger.info('User logged in successfully:', { id: user.id, email: user.email, role: user.role });
     const tokens = this.generateAuthTokens(user);
-    return { user, ...tokens };
+    
+    // Log the generated tokens and user data
+    logger.info('Generated tokens and user data:', { 
+      userId: user.id,
+      userEmail: user.email,
+      userRole: user.role,
+      tokenPayload: {
+        userId: user.id,
+        email: user.email,
+        role: user.role
+      }
+    });
+
+    // Return a clean user object with only the necessary fields
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role
+      },
+      ...tokens
+    };
   }
 
   private generateAuthTokens(user: User) {
     const payload = {
       userId: user.id,
       email: user.email,
-      role: user.role || 'user'
+      role: user.role
     };
+
+    logger.info('Generating tokens with payload:', payload);
 
     return {
       accessToken: generateToken(payload),

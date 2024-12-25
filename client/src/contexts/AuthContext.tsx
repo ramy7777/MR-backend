@@ -36,9 +36,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const token = localStorage.getItem('token');
       if (token) {
+        console.log('Found token in localStorage');
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         const response = await axios.get('http://localhost:3001/api/auth/me');
-        setUser(response.data.data.user);
+        const userData = response.data.data.user;
+        console.log('User info from /me:', userData);
+        
+        // Make sure we include all required fields
+        const userWithRole = {
+          id: userData.id,
+          email: userData.email,
+          name: userData.name,
+          role: userData.role
+        };
+        console.log('Setting user with role:', userWithRole);
+        setUser(userWithRole);
       }
     } catch (err) {
       console.error('Token validation failed:', err);
@@ -53,6 +65,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     validateToken();
   }, []);
 
+  useEffect(() => {
+    console.log('User state changed:', user);
+  }, [user]);
+
   const login = async (email: string, password: string) => {
     try {
       setError(null);
@@ -60,11 +76,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         email,
         password,
       });
-      const { user, accessToken } = response.data.data;
+      console.log('Login response:', response.data);
+      const { user: userData, accessToken } = response.data.data;
+      console.log('User data from login:', userData);
+      console.log('Access token from login:', accessToken);
+      
+      // Make sure we include all required fields
+      const userWithRole = {
+        id: userData.id,
+        email: userData.email,
+        name: userData.name,
+        role: userData.role
+      };
+      console.log('Setting user with role:', userWithRole);
+      
       localStorage.setItem('token', accessToken);
       axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-      setUser(user);
+      setUser(userWithRole);
     } catch (err: any) {
+      console.error('Login error:', err);
       setError(err.response?.data?.message || 'An error occurred during login');
       throw err;
     }
@@ -78,11 +108,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         password,
         name,
       });
-      const { user, accessToken } = response.data.data;
+      console.log('Register response:', response.data);
+      const { user: userData, accessToken } = response.data.data;
+      console.log('User data from register:', userData);
+      console.log('Access token from register:', accessToken);
+      
+      // Make sure we include all required fields
+      const userWithRole = {
+        id: userData.id,
+        email: userData.email,
+        name: userData.name,
+        role: userData.role
+      };
+      console.log('Setting user with role:', userWithRole);
+      
       localStorage.setItem('token', accessToken);
       axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-      setUser(user);
+      setUser(userWithRole);
     } catch (err: any) {
+      console.error('Register error:', err);
       setError(err.response?.data?.message || 'An error occurred during registration');
       throw err;
     }
