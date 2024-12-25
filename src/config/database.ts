@@ -1,4 +1,4 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSource, DataSourceOptions, PostgresConnectionOptions } from 'typeorm';
 import { logger } from '../utils/logger';
 import { User } from '../entities/User';
 import { Subscription } from '../entities/Subscription';
@@ -9,7 +9,7 @@ import { Session } from '../entities/Session';
 const MAX_RETRIES = 5;
 const RETRY_DELAY = 5000; // 5 seconds
 
-function parseDbUrl(url: string): Partial<DataSourceOptions> {
+function parseDbUrl(url: string): Partial<PostgresConnectionOptions> {
   try {
     const matches = url.match(/^postgres(?:ql)?:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)$/);
     if (!matches) {
@@ -31,7 +31,7 @@ function parseDbUrl(url: string): Partial<DataSourceOptions> {
   }
 }
 
-function getDataSourceConfig(): DataSourceOptions {
+function getDataSourceConfig(): PostgresConnectionOptions {
   const isProd = process.env.NODE_ENV === 'production';
   const config = isProd && process.env.DATABASE_URL
     ? {
@@ -51,14 +51,13 @@ function getDataSourceConfig(): DataSourceOptions {
         ssl: false
       };
 
+  const { password, ...loggableConfig } = config;
   logger.info('Database configuration:', {
-    host: config.host,
-    port: config.port,
-    database: config.database,
-    ssl: !!config.ssl
+    ...loggableConfig,
+    password: '***'
   });
 
-  return config as DataSourceOptions;
+  return config;
 }
 
 const config = getDataSourceConfig();
