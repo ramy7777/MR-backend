@@ -438,3 +438,14 @@
 {"level":"info","message":"Retrying database connection in 5 seconds... (Attempt 2/5)","timestamp":"2024-12-25T17:01:58.107Z"}
 {"error":{"message":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string"},"level":"error","message":"Error connecting to database:","timestamp":"2024-12-25T17:02:03.158Z"}
 {"level":"info","message":"Retrying database connection in 5 seconds... (Attempt 3/5)","timestamp":"2024-12-25T17:02:03.158Z"}
+{"error":{"message":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string"},"level":"error","message":"Error connecting to database:","timestamp":"2024-12-25T17:02:05.792Z"}
+{"level":"info","message":"Retrying database connection in 5 seconds... (Attempt 1/5)","timestamp":"2024-12-25T17:02:06.339Z"}
+{"error":{"message":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string"},"level":"error","message":"Error connecting to database:","timestamp":"2024-12-25T17:02:11.394Z"}
+{"level":"info","message":"Retrying database connection in 5 seconds... (Attempt 2/5)","timestamp":"2024-12-25T17:02:11.395Z"}
+{"error":{"message":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string"},"level":"error","message":"Error connecting to database:","timestamp":"2024-12-25T17:02:16.453Z"}
+{"level":"info","message":"Retrying database connection in 5 seconds... (Attempt 3/5)","timestamp":"2024-12-25T17:02:16.454Z"}
+{"error":{"message":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string"},"level":"error","message":"Error connecting to database:","timestamp":"2024-12-25T17:02:21.510Z"}
+{"level":"info","message":"Retrying database connection in 5 seconds... (Attempt 4/5)","timestamp":"2024-12-25T17:02:21.511Z"}
+{"error":{"message":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string"},"level":"error","message":"Error connecting to database:","timestamp":"2024-12-25T17:02:26.567Z"}
+{"level":"info","message":"Retrying database connection in 5 seconds... (Attempt 5/5)","timestamp":"2024-12-25T17:02:26.568Z"}
+{"error":{"message":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string"},"level":"error","message":"Error connecting to database:","timestamp":"2024-12-25T17:02:31.638Z"}

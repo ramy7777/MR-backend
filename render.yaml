@@ -9,26 +9,10 @@ services:
         value: production
       - key: PORT
         value: 10000
-      - key: DB_HOST
+      - key: DATABASE_URL
         fromDatabase:
           name: mr-platform-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: mr-platform-db
-          property: port
-      - key: DB_USER
-        fromDatabase:
-          name: mr-platform-db
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: mr-platform-db
-          property: password
-      - key: DB_NAME
-        fromDatabase:
-          name: mr-platform-db
-          property: database
+          property: connectionString
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRES_IN
@@ -42,3 +26,4 @@ databases:
   - name: mr-platform-db
     databaseName: mr_platform
     plan: free
+    ipAllowList: [] # only allow internal connections
