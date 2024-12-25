@@ -449,3 +449,7 @@
 {"error":{"message":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string"},"level":"error","message":"Error connecting to database:","timestamp":"2024-12-25T17:02:26.567Z"}
 {"level":"info","message":"Retrying database connection in 5 seconds... (Attempt 5/5)","timestamp":"2024-12-25T17:02:26.568Z"}
 {"error":{"message":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string"},"level":"error","message":"Error connecting to database:","timestamp":"2024-12-25T17:02:31.638Z"}
+{"database":"mr_platform","level":"info","message":"Database connection established successfully","timestamp":"2024-12-25T17:05:24.650Z","url":"localhost:5432"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-25T17:05:24.654Z"}
+{"level":"info","message":"Environment: development","timestamp":"2024-12-25T17:05:24.655Z"}
+{"level":"info","message":"Database host: localhost","timestamp":"2024-12-25T17:05:24.655Z"}

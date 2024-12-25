@@ -28,6 +28,20 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Debug endpoint (only in development)
+if (process.env.NODE_ENV !== 'production') {
+  app.get('/debug/env', (req, res) => {
+    res.json({
+      NODE_ENV: process.env.NODE_ENV,
+      PORT: process.env.PORT,
+      DATABASE_URL: process.env.DATABASE_URL ? '***' : undefined,
+      DB_HOST: process.env.DB_HOST,
+      DB_PORT: process.env.DB_PORT,
+      DB_NAME: process.env.DB_NAME,
+    });
+  });
+}
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -41,6 +55,14 @@ app.use(errorHandler);
 
 const startServer = async () => {
   try {
+    // Log environment
+    logger.info('Starting server with configuration:', {
+      NODE_ENV: process.env.NODE_ENV,
+      PORT: port,
+      DATABASE_URL: process.env.DATABASE_URL ? '***' : undefined,
+      DB_HOST: process.env.DB_HOST,
+    });
+
     // Initialize database
     await setupDatabase();
 
@@ -48,7 +70,6 @@ const startServer = async () => {
     app.listen(port, () => {
       logger.info(`Server is running on port ${port}`);
       logger.info(`Environment: ${process.env.NODE_ENV}`);
-      logger.info(`Database host: ${process.env.DB_HOST}`);
     });
   } catch (error) {
     logger.error('Failed to start server:', error);
