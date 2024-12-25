@@ -144,3 +144,16 @@
 {"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-25T12:39:19.516Z"}
 {"level":"info","message":"Database connection established","timestamp":"2024-12-25T12:39:32.966Z"}
 {"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-25T12:39:32.970Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735133911,"iat":1735130311,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T12:39:44.299Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-25T12:39:44.299Z","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-25T12:39:44.307Z","user":{"email":"test@gmail.com","id":"1bf23256-43fa-4b70-b91c-56ee101446bb","role":"admin"}}
+{"decoded":{"email":"test@gmail.com","exp":1735133911,"iat":1735130311,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T12:39:44.310Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-25T12:39:44.310Z","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-25T12:39:44.312Z","user":{"email":"test@gmail.com","id":"1bf23256-43fa-4b70-b91c-56ee101446bb","role":"admin"}}
+{"email":"test@gmai.com","level":"info","message":"Login attempt:","timestamp":"2024-12-25T12:40:15.168Z"}
+{"email":"test@gmai.com","level":"warn","message":"Login failed - user not found:","timestamp":"2024-12-25T12:40:15.197Z"}
+{"level":"warn","message":"Invalid credentials","timestamp":"2024-12-25T12:40:15.198Z"}
+{"email":"test@gmail.com","level":"info","message":"Login attempt:","timestamp":"2024-12-25T12:40:26.024Z"}
+{"email":"test@gmail.com","id":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"User logged in successfully:","role":"admin","timestamp":"2024-12-25T12:40:26.103Z"}
+{"email":"test@gmail.com","level":"info","message":"Generating tokens with payload:","role":"admin","timestamp":"2024-12-25T12:40:26.104Z","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"}
+{"level":"info","message":"Generated tokens and user data:","timestamp":"2024-12-25T12:40:26.107Z","tokenPayload":{"email":"test@gmail.com","role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"userEmail":"test@gmail.com","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb","userRole":"admin"}
