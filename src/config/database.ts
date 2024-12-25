@@ -9,7 +9,7 @@ import { Session } from '../entities/Session';
 const MAX_RETRIES = 5;
 const RETRY_DELAY = 5000; // 5 seconds
 
-type PostgresConfig = DataSourceOptions & {
+type PostgresConfig = {
   type: 'postgres';
   host: string;
   port: number;
@@ -17,9 +17,15 @@ type PostgresConfig = DataSourceOptions & {
   password: string;
   database: string;
   ssl?: boolean | { rejectUnauthorized: boolean };
+  synchronize?: boolean;
+  logging?: boolean;
+  entities?: any[];
+  cache?: boolean;
+  dropSchema?: boolean;
+  migrationsRun?: boolean;
 };
 
-function parseDbUrl(url: string): Partial<PostgresConfig> {
+function parseDbUrl(url: string): PostgresConfig {
   try {
     const matches = url.match(/^postgres(?:ql)?:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)$/);
     if (!matches) {
@@ -33,7 +39,9 @@ function parseDbUrl(url: string): Partial<PostgresConfig> {
       username: user,
       password,
       database,
-      ssl: { rejectUnauthorized: false }
+      ssl: { rejectUnauthorized: false },
+      synchronize: false,
+      logging: false
     };
   } catch (error) {
     logger.error('Error parsing database URL:', { error, url: url.replace(/:[^:@]+@/, ':***@') });
@@ -63,12 +71,7 @@ function getDataSourceConfig(): PostgresConfig {
     throw new Error('DATABASE_URL is required in production');
   }
 
-  const config: PostgresConfig = {
-    ...parseDbUrl(process.env.DATABASE_URL),
-    type: 'postgres',
-    synchronize: false,
-    logging: false
-  };
+  const config = parseDbUrl(process.env.DATABASE_URL);
 
   const { password: _, ...loggableConfig } = config;
   logger.info('Database configuration:', {
@@ -87,7 +90,7 @@ export const AppDataSource = new DataSource({
   cache: true,
   dropSchema: false,
   migrationsRun: false
-});
+} as DataSourceOptions);
 
 export const setupDatabase = async (retryCount = 0): Promise<void> => {
   try {
