@@ -4,7 +4,7 @@ import { authenticate } from '../middleware/authenticate';
 import { AppDataSource } from '../config/database';
 import { User } from '../entities/User';
 import { Subscription } from '../entities/Subscription';
-import { Device } from '../entities/Device'; // Import Device entity
+import { Device } from '../entities/Device';
 import { logger } from '../utils/logger';
 
 const router = express.Router();
@@ -30,31 +30,7 @@ const isAdmin = async (req: any, res: any, next: any) => {
 router.use(authenticate);
 router.use(isAdmin);
 
-// Get all subscriptions
-router.get('/subscriptions', async (req, res, next) => {
-  try {
-    const subscriptionRepository = AppDataSource.getRepository(Subscription);
-    const subscriptions = await subscriptionRepository.find({
-      relations: ['user'],
-      order: { createdAt: 'DESC' },
-    });
-
-    logger.info('Admin fetched all subscriptions', { 
-      adminId: req.user.userId,
-      subscriptionCount: subscriptions.length 
-    });
-
-    res.json({
-      status: 'success',
-      data: { subscriptions }
-    });
-  } catch (error) {
-    logger.error('Error fetching subscriptions', { error });
-    next(error);
-  }
-});
-
-// Get all devices for admin
+// Get all devices
 router.get('/devices', async (req, res, next) => {
   try {
     const deviceRepository = AppDataSource.getRepository(Device);
@@ -73,6 +49,148 @@ router.get('/devices', async (req, res, next) => {
     });
   } catch (error) {
     logger.error('Error fetching devices', { error });
+    next(error);
+  }
+});
+
+// Add new device
+router.post('/devices', async (req, res, next) => {
+  try {
+    const deviceRepository = AppDataSource.getRepository(Device);
+    const { serialNumber, specifications, status = 'available', condition = 'excellent' } = req.body;
+
+    // Validate required fields
+    if (!serialNumber) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Serial number is required'
+      });
+    }
+
+    // Check for duplicate serial number
+    const existingDevice = await deviceRepository.findOne({
+      where: { serialNumber }
+    });
+
+    if (existingDevice) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Device with this serial number already exists'
+      });
+    }
+
+    const device = deviceRepository.create({
+      serialNumber,
+      specifications,
+      status,
+      condition,
+      lastMaintenance: null,
+      currentUserId: null
+    });
+
+    await deviceRepository.save(device);
+
+    logger.info('Admin added new device', {
+      adminId: req.user.userId,
+      deviceId: device.id,
+      serialNumber
+    });
+
+    res.status(201).json({
+      status: 'success',
+      data: { device }
+    });
+  } catch (error) {
+    logger.error('Error adding device', { error });
+    next(error);
+  }
+});
+
+// Update device
+router.put('/devices/:id', async (req, res, next) => {
+  try {
+    const deviceRepository = AppDataSource.getRepository(Device);
+    const { id } = req.params;
+    const { serialNumber, specifications, status, condition } = req.body;
+
+    const device = await deviceRepository.findOne({
+      where: { id }
+    });
+
+    if (!device) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Device not found'
+      });
+    }
+
+    // Check for duplicate serial number if it's being changed
+    if (serialNumber && serialNumber !== device.serialNumber) {
+      const existingDevice = await deviceRepository.findOne({
+        where: { serialNumber }
+      });
+
+      if (existingDevice) {
+        return res.status(400).json({
+          status: 'error',
+          message: 'Device with this serial number already exists'
+        });
+      }
+    }
+
+    Object.assign(device, {
+      serialNumber: serialNumber || device.serialNumber,
+      specifications: specifications || device.specifications,
+      status: status || device.status,
+      condition: condition || device.condition
+    });
+
+    await deviceRepository.save(device);
+
+    logger.info('Admin updated device', {
+      adminId: req.user.userId,
+      deviceId: id
+    });
+
+    res.json({
+      status: 'success',
+      data: { device }
+    });
+  } catch (error) {
+    logger.error('Error updating device', { error });
+    next(error);
+  }
+});
+
+// Delete device
+router.delete('/devices/:id', async (req, res, next) => {
+  try {
+    const deviceRepository = AppDataSource.getRepository(Device);
+    const { id } = req.params;
+    const device = await deviceRepository.findOne({
+      where: { id }
+    });
+
+    if (!device) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Device not found'
+      });
+    }
+
+    await deviceRepository.remove(device);
+
+    logger.info('Admin deleted device', {
+      adminId: req.user.userId,
+      deviceId: id
+    });
+
+    res.json({
+      status: 'success',
+      message: 'Device deleted successfully'
+    });
+  } catch (error) {
+    logger.error('Error deleting device', { error });
     next(error);
   }
 });
@@ -109,30 +227,26 @@ router.patch('/devices/:id/status', async (req, res, next) => {
   }
 });
 
-// Delete device
-router.delete('/devices/:id', async (req, res, next) => {
+// Get all subscriptions
+router.get('/subscriptions', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const deviceRepository = AppDataSource.getRepository(Device);
-    const device = await deviceRepository.findOne({ where: { id } });
-    
-    if (!device) {
-      return res.status(404).json({ status: 'error', message: 'Device not found' });
-    }
+    const subscriptionRepository = AppDataSource.getRepository(Subscription);
+    const subscriptions = await subscriptionRepository.find({
+      relations: ['user'],
+      order: { createdAt: 'DESC' },
+    });
 
-    await deviceRepository.remove(device);
-
-    logger.info('Admin deleted device', { 
+    logger.info('Admin fetched all subscriptions', { 
       adminId: req.user.userId,
-      deviceId: id
+      subscriptionCount: subscriptions.length 
     });
 
     res.json({
       status: 'success',
-      message: 'Device deleted successfully'
+      data: { subscriptions }
     });
   } catch (error) {
-    logger.error('Error deleting device', { error });
+    logger.error('Error fetching subscriptions', { error });
     next(error);
   }
 });

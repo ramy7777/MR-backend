@@ -21,6 +21,17 @@ interface Plan {
   features: string[];
 }
 
+interface Device {
+  id: string;
+  serialNumber: string;
+  specifications?: {
+    model?: string;
+    manufacturer?: string;
+    firmware?: string;
+    hardware?: string;
+  };
+}
+
 const plans: Plan[] = [
   {
     type: 'daily',
@@ -63,6 +74,8 @@ const SubscriptionPlans: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [assignedDevices, setAssignedDevices] = useState<Device[]>([]);
 
   const handleSubscribe = async (plan: Plan) => {
     setSelectedPlan(plan);
@@ -76,20 +89,26 @@ const SubscriptionPlans: React.FC = () => {
     setError(null);
 
     try {
-      await axios.post('http://localhost:3001/api/subscriptions', {
+      const response = await axios.post('http://localhost:3001/api/subscriptions', {
         planType: selectedPlan.type,
         amount: selectedPlan.price
       });
 
-      // Close dialog and show success message
+      if (response.data?.data?.assignedDevices) {
+        setAssignedDevices(response.data.data.assignedDevices);
+      }
       setDialogOpen(false);
-      // You might want to show a success notification here
-      window.location.reload(); // Refresh to show new subscription
+      setSuccessDialogOpen(true);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to create subscription');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSuccessClose = () => {
+    setSuccessDialogOpen(false);
+    window.location.reload(); // Refresh to show new subscription
   };
 
   return (
@@ -101,59 +120,39 @@ const SubscriptionPlans: React.FC = () => {
         Select the plan that best fits your needs
       </Typography>
 
-      <Grid container spacing={4}>
+      <Grid container spacing={3}>
         {plans.map((plan) => (
           <Grid item xs={12} md={4} key={plan.type}>
-            <Card 
-              sx={{ 
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                transition: 'transform 0.2s',
-                '&:hover': {
-                  transform: 'scale(1.02)',
-                  boxShadow: 6
-                }
-              }}
-            >
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Typography variant="h5" component="div" gutterBottom>
+            <Card sx={{ height: '100%' }}>
+              <CardContent>
+                <Typography variant="h5" gutterBottom>
                   {plan.type.charAt(0).toUpperCase() + plan.type.slice(1)} Plan
                 </Typography>
                 <Typography variant="h4" color="primary" gutterBottom>
                   ${plan.price}
                 </Typography>
-                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  {plan.type === 'daily' ? 'per day' : plan.type === 'weekly' ? 'per week' : 'per month'}
-                </Typography>
                 <Box sx={{ mt: 2 }}>
                   {plan.features.map((feature, index) => (
-                    <Typography
-                      key={index}
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ py: 0.5 }}
-                    >
+                    <Typography key={index} variant="body2" sx={{ mb: 1 }}>
                       • {feature}
                     </Typography>
                   ))}
                 </Box>
-              </CardContent>
-              <Box sx={{ p: 2 }}>
                 <Button
                   variant="contained"
                   fullWidth
+                  sx={{ mt: 2 }}
                   onClick={() => handleSubscribe(plan)}
                 >
-                  Subscribe Now
+                  Subscribe
                 </Button>
-              </Box>
+              </CardContent>
             </Card>
           </Grid>
         ))}
       </Grid>
 
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+      <Dialog open={dialogOpen} onClose={() => !loading && setDialogOpen(false)}>
         <DialogTitle>Confirm Subscription</DialogTitle>
         <DialogContent>
           {error && (
@@ -175,6 +174,44 @@ const SubscriptionPlans: React.FC = () => {
             disabled={loading}
           >
             {loading ? <CircularProgress size={24} /> : 'Confirm'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={successDialogOpen} onClose={handleSuccessClose}>
+        <DialogTitle>Subscription Successful!</DialogTitle>
+        <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Your subscription is now active
+            </Typography>
+            {assignedDevices.length > 0 ? (
+              <>
+                <Typography variant="subtitle1" gutterBottom>
+                  Assigned Devices:
+                </Typography>
+                {assignedDevices.map((device) => (
+                  <Box key={device.id} sx={{ mb: 1 }}>
+                    <Typography>
+                      • Device {device.serialNumber}
+                      {device.specifications?.model && ` - ${device.specifications.model}`}
+                    </Typography>
+                  </Box>
+                ))}
+              </>
+            ) : (
+              <Typography color="warning.main">
+                No devices are currently available. Please contact support for assistance.
+              </Typography>
+            )}
+            <Typography sx={{ mt: 2 }}>
+              You can manage your devices in the Devices tab.
+            </Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSuccessClose} variant="contained">
+            Got it
           </Button>
         </DialogActions>
       </Dialog>
