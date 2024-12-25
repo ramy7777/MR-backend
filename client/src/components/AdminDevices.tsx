@@ -27,7 +27,7 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
-import axios from 'axios';
+import api from '../config/api';
 
 interface Device {
   id: string;
@@ -181,7 +181,7 @@ const AdminDevices = () => {
   const fetchDevices = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3001/api/admin/devices');
+      const response = await api.get('/api/admin/devices');
       setDevices(response.data.data.devices);
       setError(null);
     } catch (err: any) {
@@ -193,7 +193,7 @@ const AdminDevices = () => {
 
   const handleAddDevice = async (deviceData: Partial<Device>) => {
     try {
-      await axios.post('http://localhost:3001/api/admin/devices', deviceData);
+      await api.post('/api/admin/devices', deviceData);
       fetchDevices();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to add device');
@@ -202,7 +202,7 @@ const AdminDevices = () => {
 
   const handleEditDevice = async (deviceData: Partial<Device>) => {
     try {
-      await axios.put(`http://localhost:3001/api/admin/devices/${selectedDevice?.id}`, deviceData);
+      await api.put(`/api/admin/devices/${selectedDevice?.id}`, deviceData);
       fetchDevices();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to update device');
@@ -212,7 +212,7 @@ const AdminDevices = () => {
   const handleDeleteDevice = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this device?')) {
       try {
-        await axios.delete(`http://localhost:3001/api/admin/devices/${id}`);
+        await api.delete(`/api/admin/devices/${id}`);
         fetchDevices();
       } catch (err: any) {
         setError(err.response?.data?.message || 'Failed to delete device');

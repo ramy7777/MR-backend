@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
+import api from '../config/api';
 
 interface Plan {
   type: 'daily' | 'weekly' | 'monthly';
@@ -89,7 +90,7 @@ const SubscriptionPlans: React.FC = () => {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:3001/api/subscriptions', {
+      const response = await api.post('/api/subscriptions', {
         planType: selectedPlan.type,
         amount: selectedPlan.price
       });

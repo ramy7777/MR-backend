@@ -321,3 +321,80 @@
 {"decoded":{"email":"test@gmail.com","exp":1735135746,"iat":1735132146,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:09:46.660Z"}
 {"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","deviceCount":0,"level":"info","message":"Admin fetched all devices","timestamp":"2024-12-25T13:09:46.663Z"}
 {"decoded":{"email":"test@gmail.com","exp":1735135746,"iat":1735132146,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:09:56.023Z"}
+{"level":"info","message":"Database connection established","timestamp":"2024-12-25T13:11:31.368Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-25T13:11:31.372Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735135746,"iat":1735132146,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:11:50.912Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-25T13:11:50.912Z","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-25T13:11:50.922Z","user":{"email":"test@gmail.com","id":"1bf23256-43fa-4b70-b91c-56ee101446bb","role":"admin"}}
+{"decoded":{"email":"test@gmail.com","exp":1735135746,"iat":1735132146,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:11:50.925Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-25T13:11:50.926Z","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-25T13:11:50.928Z","user":{"email":"test@gmail.com","id":"1bf23256-43fa-4b70-b91c-56ee101446bb","role":"admin"}}
+{"decoded":{"email":"test@gmail.com","exp":1735135746,"iat":1735132146,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:11:51.015Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","deviceCount":0,"level":"info","message":"Admin fetched all devices","timestamp":"2024-12-25T13:11:51.020Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735135746,"iat":1735132146,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:11:51.023Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","deviceCount":0,"level":"info","message":"Admin fetched all devices","timestamp":"2024-12-25T13:11:51.027Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735135746,"iat":1735132146,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:12:01.807Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","deviceId":"89754b74-82d6-4b32-b05a-2c0bfe5180b1","level":"info","message":"Admin added new device","serialNumber":"1","timestamp":"2024-12-25T13:12:01.836Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735135746,"iat":1735132146,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:12:01.841Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","deviceCount":1,"level":"info","message":"Admin fetched all devices","timestamp":"2024-12-25T13:12:01.846Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735135746,"iat":1735132146,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:12:07.259Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":2,"timestamp":"2024-12-25T13:12:07.267Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735135746,"iat":1735132146,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:12:07.269Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":2,"timestamp":"2024-12-25T13:12:07.273Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735135746,"iat":1735132146,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:12:09.546Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":2,"timestamp":"2024-12-25T13:12:09.551Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735135746,"iat":1735132146,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:12:09.555Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":2,"timestamp":"2024-12-25T13:12:09.562Z"}
+{"email":"client","level":"info","message":"Login attempt:","timestamp":"2024-12-25T13:12:31.770Z"}
+{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","level":"info","message":"User logged in successfully:","role":"user","timestamp":"2024-12-25T13:12:31.849Z"}
+{"email":"client","level":"info","message":"Generating tokens with payload:","role":"user","timestamp":"2024-12-25T13:12:31.850Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"Generated tokens and user data:","timestamp":"2024-12-25T13:12:31.853Z","tokenPayload":{"email":"client","role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"userEmail":"client","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214","userRole":"user"}
+{"deviceId":"89754b74-82d6-4b32-b05a-2c0bfe5180b1","level":"info","message":"Device assigned to user","subscriptionId":"8d084007-a39f-4336-95b1-0e61d943150f","timestamp":"2024-12-25T13:12:45.318Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"decoded":{"email":"client","exp":1735135951,"iat":1735132351,"role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:13:22.002Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-25T13:13:22.002Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-25T13:13:22.026Z","user":{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","role":"user"}}
+{"decoded":{"email":"client","exp":1735135951,"iat":1735132351,"role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:13:22.028Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-25T13:13:22.028Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-25T13:13:22.030Z","user":{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","role":"user"}}
+{"email":"test@gmail.com","level":"info","message":"Login attempt:","timestamp":"2024-12-25T13:13:52.640Z"}
+{"email":"test@gmail.com","id":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"User logged in successfully:","role":"admin","timestamp":"2024-12-25T13:13:52.714Z"}
+{"email":"test@gmail.com","level":"info","message":"Generating tokens with payload:","role":"admin","timestamp":"2024-12-25T13:13:52.714Z","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"}
+{"level":"info","message":"Generated tokens and user data:","timestamp":"2024-12-25T13:13:52.716Z","tokenPayload":{"email":"test@gmail.com","role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"userEmail":"test@gmail.com","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb","userRole":"admin"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:13:56.729Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","deviceCount":1,"level":"info","message":"Admin fetched all devices","timestamp":"2024-12-25T13:13:56.732Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:13:56.735Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","deviceCount":1,"level":"info","message":"Admin fetched all devices","timestamp":"2024-12-25T13:13:56.739Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:08.467Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","deviceId":"b0f9e168-6a06-4b35-b9af-c40ae7f0ae92","level":"info","message":"Admin added new device","serialNumber":"2","timestamp":"2024-12-25T13:14:08.487Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:08.492Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","deviceCount":2,"level":"info","message":"Admin fetched all devices","timestamp":"2024-12-25T13:14:08.496Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:13.345Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":3,"timestamp":"2024-12-25T13:14:13.352Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:13.354Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":3,"timestamp":"2024-12-25T13:14:13.359Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:29.440Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-25T13:14:29.440Z","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-25T13:14:29.443Z","user":{"email":"test@gmail.com","id":"1bf23256-43fa-4b70-b91c-56ee101446bb","role":"admin"}}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:29.444Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-25T13:14:29.445Z","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-25T13:14:29.446Z","user":{"email":"test@gmail.com","id":"1bf23256-43fa-4b70-b91c-56ee101446bb","role":"admin"}}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:29.503Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":3,"timestamp":"2024-12-25T13:14:29.508Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:29.510Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":3,"timestamp":"2024-12-25T13:14:29.516Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:30.860Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":3,"timestamp":"2024-12-25T13:14:30.865Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:30.867Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":3,"timestamp":"2024-12-25T13:14:30.872Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:36.013Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","deviceCount":2,"level":"info","message":"Admin fetched all devices","timestamp":"2024-12-25T13:14:36.017Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:36.020Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","deviceCount":2,"level":"info","message":"Admin fetched all devices","timestamp":"2024-12-25T13:14:36.023Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:38.306Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":3,"timestamp":"2024-12-25T13:14:38.311Z"}
+{"decoded":{"email":"test@gmail.com","exp":1735136032,"iat":1735132432,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:14:38.313Z"}
+{"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":3,"timestamp":"2024-12-25T13:14:38.317Z"}
+{"email":"client","level":"info","message":"Login attempt:","timestamp":"2024-12-25T13:14:51.094Z"}
+{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","level":"info","message":"User logged in successfully:","role":"user","timestamp":"2024-12-25T13:14:51.166Z"}
+{"email":"client","level":"info","message":"Generating tokens with payload:","role":"user","timestamp":"2024-12-25T13:14:51.167Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"Generated tokens and user data:","timestamp":"2024-12-25T13:14:51.168Z","tokenPayload":{"email":"client","role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"userEmail":"client","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214","userRole":"user"}
