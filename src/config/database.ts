@@ -13,6 +13,9 @@ const dbPassword = process.env.DB_PASSWORD || 'postgres';
 const dbHost = process.env.DB_HOST || 'localhost';
 const dbPort = parseInt(process.env.DB_PORT || '5432');
 
+const MAX_RETRIES = 5;
+const RETRY_DELAY = 5000; // 5 seconds
+
 export const AppDataSource = new DataSource({
   type: 'postgres',
   host: dbHost,
@@ -23,7 +26,7 @@ export const AppDataSource = new DataSource({
   entities: [User, Subscription, Device, Rental, Session],
   synchronize: process.env.NODE_ENV !== 'production',
   logging: process.env.NODE_ENV !== 'production',
-  ssl: process.env.DB_SSL === 'true',
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   cache: true,
   dropSchema: false,
   migrationsRun: false,
@@ -64,13 +67,20 @@ async function createDatabase() {
   }
 }
 
-export const setupDatabase = async () => {
+export const setupDatabase = async (retryCount = 0): Promise<void> => {
   try {
     await createDatabase();
     await AppDataSource.initialize();
-    logger.info('Database connection established');
+    logger.info('Database connection established successfully');
   } catch (error) {
-    logger.error('Error connecting to database:', error);
+    logger.error('Error creating database:', error);
+
+    if (retryCount < MAX_RETRIES) {
+      logger.info(`Retrying database connection in ${RETRY_DELAY / 1000} seconds... (Attempt ${retryCount + 1}/${MAX_RETRIES})`);
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+      return setupDatabase(retryCount + 1);
+    }
+
     throw error;
   }
 };

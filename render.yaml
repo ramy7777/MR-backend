@@ -10,15 +10,25 @@ services:
       - key: PORT
         value: 10000
       - key: DB_HOST
-        sync: false
+        fromDatabase:
+          name: mr-platform-db
+          property: host
       - key: DB_PORT
-        value: 5432
+        fromDatabase:
+          name: mr-platform-db
+          property: port
       - key: DB_USER
-        sync: false
+        fromDatabase:
+          name: mr-platform-db
+          property: user
       - key: DB_PASSWORD
-        sync: false
+        fromDatabase:
+          name: mr-platform-db
+          property: password
       - key: DB_NAME
-        value: mr_platform
+        fromDatabase:
+          name: mr-platform-db
+          property: database
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRES_IN
@@ -27,3 +37,8 @@ services:
         value: 7d
       - key: LOG_LEVEL
         value: info
+
+databases:
+  - name: mr-platform-db
+    databaseName: mr_platform
+    plan: free
