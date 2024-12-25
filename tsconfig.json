@@ -12,7 +12,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "allowJs": true,
+    "declaration": true,
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

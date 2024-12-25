@@ -23,6 +23,13 @@ export class User {
     address?: string;
   };
 
+  @Column({
+    type: 'enum',
+    enum: ['user', 'admin'],
+    default: 'user'
+  })
+  role: 'user' | 'admin';
+
   @Column({ default: 'active' })
   status: 'active' | 'inactive' | 'suspended';
 

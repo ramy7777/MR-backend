@@ -19,6 +19,7 @@ export class AuthService {
       passwordHash,
       name,
       status: 'active',
+      role: 'user'
     });
 
     await this.userRepository.save(user);
@@ -43,10 +44,15 @@ export class AuthService {
   }
 
   private generateAuthTokens(user: User) {
-    const payload = { userId: user.id, email: user.email };
+    const payload = {
+      userId: user.id,
+      email: user.email,
+      role: user.role || 'user'
+    };
+
     return {
       accessToken: generateToken(payload),
-      refreshToken: generateRefreshToken(payload),
+      refreshToken: generateRefreshToken(payload)
     };
   }
 }
