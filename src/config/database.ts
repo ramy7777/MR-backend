@@ -9,14 +9,15 @@ import { Session } from '../entities/Session';
 const MAX_RETRIES = 5;
 const RETRY_DELAY = 5000; // 5 seconds
 
-interface PostgresConfig extends DataSourceOptions {
+type PostgresConfig = DataSourceOptions & {
+  type: 'postgres';
   host: string;
   port: number;
   username: string;
   password: string;
   database: string;
-  ssl?: any;
-}
+  ssl?: boolean | { rejectUnauthorized: boolean };
+};
 
 function parseDbUrl(url: string): Partial<PostgresConfig> {
   try {
@@ -42,15 +43,15 @@ function parseDbUrl(url: string): Partial<PostgresConfig> {
 
 function getDataSourceConfig(): PostgresConfig {
   const isProd = process.env.NODE_ENV === 'production';
-  const config = isProd && process.env.DATABASE_URL
+  const config: PostgresConfig = isProd && process.env.DATABASE_URL
     ? {
         ...parseDbUrl(process.env.DATABASE_URL),
-        type: 'postgres' as const,
+        type: 'postgres',
         synchronize: false,
         logging: false
-      }
+      } as PostgresConfig
     : {
-        type: 'postgres' as const,
+        type: 'postgres',
         host: process.env.DB_HOST || 'localhost',
         port: parseInt(process.env.DB_PORT || '5432'),
         username: process.env.DB_USER || 'postgres',
@@ -61,13 +62,13 @@ function getDataSourceConfig(): PostgresConfig {
         ssl: false
       };
 
-  const { password, ...loggableConfig } = config;
+  const { password: _, ...loggableConfig } = config;
   logger.info('Database configuration:', {
     ...loggableConfig,
     password: '***'
   });
 
-  return config as PostgresConfig;
+  return config;
 }
 
 const config = getDataSourceConfig();
