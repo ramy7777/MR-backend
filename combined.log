@@ -430,3 +430,11 @@
 {"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":3,"timestamp":"2024-12-25T13:20:21.435Z"}
 {"decoded":{"email":"test@gmail.com","exp":1735136396,"iat":1735132796,"role":"admin","userId":"1bf23256-43fa-4b70-b91c-56ee101446bb"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-25T13:20:21.437Z"}
 {"adminId":"1bf23256-43fa-4b70-b91c-56ee101446bb","level":"info","message":"Admin fetched all subscriptions","subscriptionCount":3,"timestamp":"2024-12-25T13:20:21.442Z"}
+{"level":"info","message":"Database connection established successfully","timestamp":"2024-12-25T16:58:15.010Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-25T16:58:15.013Z"}
+{"error":{"message":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string"},"level":"error","message":"Error connecting to database:","timestamp":"2024-12-25T17:01:53.069Z"}
+{"level":"info","message":"Retrying database connection in 5 seconds... (Attempt 1/5)","timestamp":"2024-12-25T17:01:53.071Z"}
+{"error":{"message":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string"},"level":"error","message":"Error connecting to database:","timestamp":"2024-12-25T17:01:58.107Z"}
+{"level":"info","message":"Retrying database connection in 5 seconds... (Attempt 2/5)","timestamp":"2024-12-25T17:01:58.107Z"}
+{"error":{"message":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string"},"level":"error","message":"Error connecting to database:","timestamp":"2024-12-25T17:02:03.158Z"}
+{"level":"info","message":"Retrying database connection in 5 seconds... (Attempt 3/5)","timestamp":"2024-12-25T17:02:03.158Z"}
