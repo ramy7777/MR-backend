@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Box, Typography, Tabs, Tab } from '@mui/material';
 import SubscriptionPlans from './SubscriptionPlans';
 import SubscriptionHistory from './SubscriptionHistory';
+import AdminSubscriptions from './AdminSubscriptions';
+import { useAuth } from '../contexts/AuthContext';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -31,10 +33,22 @@ function TabPanel(props: TabPanelProps) {
 
 const Subscriptions = () => {
   const [tabValue, setTabValue] = useState(0);
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
+
+  const adminTabs = [
+    <Tab key="all" label="All Subscriptions" />,
+    <Tab key="plans" label="Available Plans" />
+  ];
+
+  const userTabs = [
+    <Tab key="plans" label="Available Plans" />,
+    <Tab key="my" label="My Subscriptions" />
+  ];
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -48,17 +62,29 @@ const Subscriptions = () => {
           onChange={handleTabChange}
           aria-label="subscription tabs"
         >
-          <Tab label="Available Plans" />
-          <Tab label="Subscription History" />
+          {isAdmin ? adminTabs : userTabs}
         </Tabs>
       </Box>
 
-      <TabPanel value={tabValue} index={0}>
-        <SubscriptionPlans />
-      </TabPanel>
-      <TabPanel value={tabValue} index={1}>
-        <SubscriptionHistory />
-      </TabPanel>
+      {isAdmin ? (
+        <>
+          <TabPanel value={tabValue} index={0}>
+            <AdminSubscriptions />
+          </TabPanel>
+          <TabPanel value={tabValue} index={1}>
+            <SubscriptionPlans />
+          </TabPanel>
+        </>
+      ) : (
+        <>
+          <TabPanel value={tabValue} index={0}>
+            <SubscriptionPlans />
+          </TabPanel>
+          <TabPanel value={tabValue} index={1}>
+            <SubscriptionHistory />
+          </TabPanel>
+        </>
+      )}
     </Box>
   );
 };
