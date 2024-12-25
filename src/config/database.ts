@@ -1,4 +1,4 @@
-import { DataSource, DataSourceOptions, PostgresConnectionOptions } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { logger } from '../utils/logger';
 import { User } from '../entities/User';
 import { Subscription } from '../entities/Subscription';
@@ -9,7 +9,16 @@ import { Session } from '../entities/Session';
 const MAX_RETRIES = 5;
 const RETRY_DELAY = 5000; // 5 seconds
 
-function parseDbUrl(url: string): Partial<PostgresConnectionOptions> {
+interface PostgresConfig extends DataSourceOptions {
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+  database: string;
+  ssl?: any;
+}
+
+function parseDbUrl(url: string): Partial<PostgresConfig> {
   try {
     const matches = url.match(/^postgres(?:ql)?:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)$/);
     if (!matches) {
@@ -31,16 +40,17 @@ function parseDbUrl(url: string): Partial<PostgresConnectionOptions> {
   }
 }
 
-function getDataSourceConfig(): PostgresConnectionOptions {
+function getDataSourceConfig(): PostgresConfig {
   const isProd = process.env.NODE_ENV === 'production';
   const config = isProd && process.env.DATABASE_URL
     ? {
         ...parseDbUrl(process.env.DATABASE_URL),
+        type: 'postgres' as const,
         synchronize: false,
         logging: false
       }
     : {
-        type: 'postgres',
+        type: 'postgres' as const,
         host: process.env.DB_HOST || 'localhost',
         port: parseInt(process.env.DB_PORT || '5432'),
         username: process.env.DB_USER || 'postgres',
@@ -57,7 +67,7 @@ function getDataSourceConfig(): PostgresConnectionOptions {
     password: '***'
   });
 
-  return config;
+  return config as PostgresConfig;
 }
 
 const config = getDataSourceConfig();
