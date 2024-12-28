@@ -15,10 +15,13 @@ interface AuthRequest extends Request {
 export class DashboardController {
   async getUserDashboard(req: AuthRequest, res: Response) {
     try {
+      logger.info('getUserDashboard called', { user: req.user });
+      
       if (!req.user) {
         throw new AppError(401, 'Unauthorized');
       }
-      const userId = req.user.id;
+      const userId = req.user.userId;
+      logger.info('Fetching dashboard data for user', { userId });
 
       // Get user's subscription
       const subscriptionRepo = AppDataSource.getRepository(Subscription);
@@ -31,6 +34,26 @@ export class DashboardController {
       const deviceRepo = AppDataSource.getRepository(Device);
       const devices = await deviceRepo.find({ where: { currentUserId: userId } });
       const activeDevices = devices.filter(device => device.status === 'rented');
+
+      // Get device details
+      const deviceDetails = devices.map(device => ({
+        id: device.id,
+        serialNumber: device.serialNumber,
+        status: device.status,
+        condition: device.condition,
+        specifications: device.specifications,
+        lastMaintenance: device.lastMaintenance
+      }));
+
+      // Format subscription data
+      const subscriptionData = subscription ? {
+        id: subscription.id,
+        planType: subscription.planType,
+        status: subscription.status,
+        startDate: subscription.startDate,
+        endDate: subscription.endDate,
+        currentUsage: subscription.currentUsage
+      } : null;
 
       // Get user's sessions
       const sessionRepo = AppDataSource.getRepository(Session);
@@ -51,25 +74,11 @@ export class DashboardController {
 
       // Format response data
       const dashboardData = {
-        subscription: subscription ? {
-          id: subscription.id,
-          plan: subscription.plan,
-          status: subscription.status,
-          startDate: subscription.startDate,
-          endDate: subscription.endDate,
-          features: subscription.features
-        } : null,
+        subscription: subscriptionData,
         devices: {
           total: devices.length,
           active: activeDevices.length,
-          list: activeDevices.map(device => ({
-            id: device.id,
-            name: device.name,
-            type: device.type,
-            status: device.status,
-            location: device.location,
-            lastActive: device.lastActive
-          }))
+          list: deviceDetails.filter(device => device.status === 'rented')
         },
         sessions: {
           recent: sessions.map(session => ({
@@ -142,7 +151,7 @@ export class DashboardController {
           'premium': 49.99,
           'enterprise': 99.99
         };
-        return acc + (planPrices[sub.plan] || 0);
+        return acc + (planPrices[sub.planType] || 0);
       }, 0);
 
       // Format admin dashboard data
@@ -188,7 +197,7 @@ export class DashboardController {
       if (!req.user) {
         throw new AppError(401, 'Unauthorized');
       }
-      const userId = req.user.id;
+      const userId = req.user.userId;
 
       const deviceRepo = AppDataSource.getRepository(Device);
       const devices = await deviceRepo.find({ where: { currentUserId: userId } });
@@ -210,7 +219,7 @@ export class DashboardController {
       if (!req.user) {
         throw new AppError(401, 'Unauthorized');
       }
-      const userId = req.user.id;
+      const userId = req.user.userId;
 
       const subscriptionRepo = AppDataSource.getRepository(Subscription);
       const subscription = await subscriptionRepo.findOne({
@@ -235,7 +244,7 @@ export class DashboardController {
       if (!req.user) {
         throw new AppError(401, 'Unauthorized');
       }
-      const userId = req.user.id;
+      const userId = req.user.userId;
 
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;

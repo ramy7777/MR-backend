@@ -12,6 +12,7 @@ import deviceRoutes from './routes/deviceRoutes';
 import rentalRoutes from './routes/rentalRoutes';
 import subscriptionRoutes from './routes/subscriptionRoutes';
 import adminRoutes from './routes/adminRoutes';
+import dashboardRoutes from './routes/dashboardRoutes';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use('/api/devices', deviceRoutes);
 app.use('/api/rentals', rentalRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Error handling
 app.use(errorHandler);

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Grid,
   Paper,
   Typography,
   Box,
+  CircularProgress,
 } from '@mui/material';
 import {
   People as PeopleIcon,
@@ -20,6 +21,9 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
+import { useAuth } from '../contexts/AuthContext';
+import AdminDashboard from './AdminDashboard';
+import CustomerDashboard from './CustomerDashboard';
 
 const data = [
   { name: 'Jan', Users: 4000, Devices: 2400, Subscriptions: 2400 },
@@ -55,55 +59,18 @@ const StatCard = ({ title, value, icon: Icon }: { title: string; value: string; 
 );
 
 const Dashboard = () => {
-  return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={3}>
-          <StatCard title="Total Users" value="2,300" icon={PeopleIcon} />
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <StatCard title="Active Devices" value="1,200" icon={DevicesIcon} />
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <StatCard
-            title="Active Subscriptions"
-            value="850"
-            icon={SubscriptionsIcon}
-          />
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <StatCard title="Monthly Revenue" value="$45,000" icon={TrendingUpIcon} />
-        </Grid>
-        <Grid item xs={12}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Platform Overview
-            </Typography>
-            <BarChart
-              width={1000}
-              height={300}
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="Users" fill="#8884d8" />
-              <Bar dataKey="Devices" fill="#82ca9d" />
-              <Bar dataKey="Subscriptions" fill="#ffc658" />
-            </BarChart>
-          </Paper>
-        </Grid>
-      </Grid>
-    </Box>
-  );
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  console.log('Current user in Dashboard:', user);
+  return user?.role === 'admin' ? <AdminDashboard /> : <CustomerDashboard />;
 };
 
 export default Dashboard;

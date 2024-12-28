@@ -43,6 +43,36 @@ export class Subscription {
   @Column('decimal', { precision: 10, scale: 2 })
   amount: number;
 
+  @Column({ type: 'timestamp', nullable: true })
+  nextBillingDate: Date;
+
+  @Column({ type: 'float', default: 0 })
+  currentUsage: number;
+
+  @Column({ type: 'float', nullable: true })
+  usageLimit: number;
+
+  @Column('jsonb', { nullable: true })
+  features: {
+    maxDevices: number;
+    supportLevel: string;
+    additionalServices: string[];
+  };
+
+  @Column('jsonb', { nullable: true })
+  billingHistory: {
+    date: Date;
+    amount: number;
+    status: string;
+  }[];
+
+  @Column('jsonb', { nullable: true })
+  usageHistory: {
+    date: Date;
+    usage: number;
+    type: string;
+  }[];
+
   @CreateDateColumn()
   createdAt: Date;
 

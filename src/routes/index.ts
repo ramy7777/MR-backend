@@ -4,6 +4,7 @@ import userRoutes from './userRoutes';
 import deviceRoutes from './deviceRoutes';
 import subscriptionRoutes from './subscriptionRoutes';
 import rentalRoutes from './rentalRoutes';
+import dashboardRoutes from './dashboardRoutes';
 
 export const setupRoutes = (app: Express) => {
   app.use('/api/auth', authRoutes);
@@ -11,4 +12,5 @@ export const setupRoutes = (app: Express) => {
   app.use('/api/devices', deviceRoutes);
   app.use('/api/subscriptions', subscriptionRoutes);
   app.use('/api/rentals', rentalRoutes);
+  app.use('/api/dashboard', dashboardRoutes);
 };
