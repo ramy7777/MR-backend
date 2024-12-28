@@ -621,3 +621,45 @@
 {"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-28T10:41:59.380Z"}
 {"level":"info","message":"Database connection established","timestamp":"2024-12-28T10:42:41.176Z"}
 {"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-28T10:42:41.180Z"}
+{"level":"info","message":"Database connection established","timestamp":"2024-12-28T11:39:40.553Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-28T11:39:40.558Z"}
+{"level":"info","message":"Database connection established","timestamp":"2024-12-28T11:40:32.146Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-28T11:40:32.151Z"}
+{"email":"client","level":"info","message":"Login attempt:","timestamp":"2024-12-28T11:40:54.935Z"}
+{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","level":"info","message":"User logged in successfully:","role":"user","timestamp":"2024-12-28T11:40:55.025Z"}
+{"email":"client","level":"info","message":"Generating tokens with payload:","role":"user","timestamp":"2024-12-28T11:40:55.025Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"Generated tokens and user data:","timestamp":"2024-12-28T11:40:55.028Z","tokenPayload":{"email":"client","role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"userEmail":"client","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214","userRole":"user"}
+{"decoded":{"email":"client","exp":1735389655,"iat":1735386055,"role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-28T11:41:03.989Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-28T11:41:03.990Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-28T11:41:03.994Z","user":{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","role":"user"}}
+{"decoded":{"email":"client","exp":1735389655,"iat":1735386055,"role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-28T11:41:03.997Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-28T11:41:03.998Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-28T11:41:04.001Z","user":{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","role":"user"}}
+{"level":"info","message":"Database connection established","timestamp":"2024-12-28T11:42:44.969Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-28T11:42:44.973Z"}
+{"decoded":{"email":"client","exp":1735389655,"iat":1735386055,"role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-28T11:43:01.467Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-28T11:43:01.468Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-28T11:43:01.484Z","user":{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","role":"user"}}
+{"decoded":{"email":"client","exp":1735389655,"iat":1735386055,"role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-28T11:43:01.490Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-28T11:43:01.491Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-28T11:43:01.497Z","user":{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","role":"user"}}
+{"decoded":{"email":"client","exp":1735389655,"iat":1735386055,"role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-28T11:43:03.594Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-28T11:43:03.595Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-28T11:43:03.598Z","user":{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","role":"user"}}
+{"decoded":{"email":"client","exp":1735389655,"iat":1735386055,"role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-28T11:43:03.601Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-28T11:43:03.601Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-28T11:43:03.604Z","user":{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","role":"user"}}
+{"decoded":{"email":"client","exp":1735389655,"iat":1735386055,"role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-28T11:43:41.930Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-28T11:43:41.930Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-28T11:43:41.968Z","user":{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","role":"user"}}
+{"decoded":{"email":"client","exp":1735389655,"iat":1735386055,"role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-28T11:43:41.971Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-28T11:43:41.972Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-28T11:43:41.975Z","user":{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","role":"user"}}
+{"decoded":{"email":"client","exp":1735389655,"iat":1735386055,"role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-28T11:43:45.404Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-28T11:43:45.405Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-28T11:43:45.408Z","user":{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","role":"user"}}
+{"decoded":{"email":"client","exp":1735389655,"iat":1735386055,"role":"user","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"},"level":"info","message":"Token decoded successfully","timestamp":"2024-12-28T11:43:45.411Z"}
+{"level":"info","message":"Getting user info","timestamp":"2024-12-28T11:43:45.412Z","userId":"b4f3f30b-546f-420c-a8c4-bb11a2218214"}
+{"level":"info","message":"User info retrieved","timestamp":"2024-12-28T11:43:45.415Z","user":{"email":"client","id":"b4f3f30b-546f-420c-a8c4-bb11a2218214","role":"user"}}
+{"level":"info","message":"Database connection established","timestamp":"2024-12-28T11:44:00.458Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-28T11:44:00.462Z"}

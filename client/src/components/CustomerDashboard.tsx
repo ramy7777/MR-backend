@@ -60,8 +60,8 @@ const CustomerDashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await axiosInstance.get('/api/dashboard/user');
-        console.log('Dashboard response:', response.data); // Add debug log
+        const response = await axiosInstance.get('/dashboard/user');
+        console.log('Dashboard response:', response.data); 
         setDashboardData(response.data.data);
         setLoading(false);
       } catch (err) {
