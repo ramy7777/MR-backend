@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { User } from './User';
+import { Device } from './Device';
 
 @Entity('subscriptions')
 export class Subscription {
@@ -49,28 +50,34 @@ export class Subscription {
   @Column({ type: 'float', default: 0 })
   currentUsage: number;
 
-  @Column({ type: 'float', nullable: true })
-  usageLimit: number;
+  @Column({ type: 'integer', default: 1 })
+  maxDevices: number;
 
-  @Column('jsonb', { nullable: true })
+  @Column({ type: 'integer', default: 0 })
+  currentDeviceCount: number;
+
+  @OneToMany(() => Device, device => device.currentSubscription)
+  devices: Device[];
+
+  @Column({ type: 'jsonb', nullable: true })
   features: {
     maxDevices: number;
-    supportLevel: string;
-    additionalServices: string[];
+    supportLevel: 'basic' | 'premium';
+    additionalServices?: string[];
   };
 
-  @Column('jsonb', { nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   billingHistory: {
-    date: Date;
+    date: string;
     amount: number;
-    status: string;
+    status: 'pending' | 'paid' | 'failed';
   }[];
 
-  @Column('jsonb', { nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   usageHistory: {
-    date: Date;
-    usage: number;
+    date: string;
     type: string;
+    usage: number;
   }[];
 
   @CreateDateColumn()
