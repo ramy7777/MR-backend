@@ -15,10 +15,10 @@ export class Subscription {
 
   @Column({
     type: 'enum',
-    enum: ['daily', 'weekly', 'monthly'],
+    enum: ['monthly', 'yearly'],
     default: 'monthly'
   })
-  planType: 'daily' | 'weekly' | 'monthly';
+  planType: 'monthly' | 'yearly';
 
   @Column()
   startDate: Date;

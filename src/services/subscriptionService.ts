@@ -23,7 +23,7 @@ export class SubscriptionService {
   }
 
   async create(userId: string, data: {
-    planType: 'daily' | 'weekly' | 'monthly';
+    planType: 'monthly' | 'yearly';
     amount: number;
   }) {
     await this.initRepositories();
@@ -103,14 +103,12 @@ export class SubscriptionService {
     }
   }
 
-  private getMaxDevices(planType: 'daily' | 'weekly' | 'monthly'): number {
+  private getMaxDevices(planType: 'monthly' | 'yearly'): number {
     switch (planType) {
-      case 'daily':
-        return 1;
-      case 'weekly':
-        return 3;
       case 'monthly':
-        return 999; // Effectively unlimited
+        return 1; // One device per monthly subscription
+      case 'yearly':
+        return 1; // One device per yearly subscription
       default:
         return 1;
     }
@@ -209,10 +207,10 @@ export class SubscriptionService {
       const newSubscription = this.subscriptionRepository.create({
         user: oldSubscription.user,
         userId: oldSubscription.userId,
-        planType: oldSubscription.planType,
+        planType: oldSubscription.planType as 'monthly' | 'yearly',
         amount: oldSubscription.amount,
         startDate: new Date(),
-        endDate: this.calculateEndDate(oldSubscription.planType),
+        endDate: this.calculateEndDate(oldSubscription.planType as 'monthly' | 'yearly'),
         status: 'active',
         paymentStatus: 'pending',
       });
@@ -220,7 +218,7 @@ export class SubscriptionService {
       await queryRunner.manager.save(newSubscription);
 
       // Find and assign new devices
-      const maxDevices = this.getMaxDevices(oldSubscription.planType);
+      const maxDevices = this.getMaxDevices(oldSubscription.planType as 'monthly' | 'yearly');
       const availableDevices = await queryRunner.manager.find(Device, {
         where: { status: 'available' },
         take: maxDevices,
@@ -257,17 +255,16 @@ export class SubscriptionService {
     }
   }
 
-  private calculateEndDate(planType: 'daily' | 'weekly' | 'monthly'): Date {
+  private calculateEndDate(planType: 'monthly' | 'yearly'): Date {
     const now = new Date();
+    
     switch (planType) {
-      case 'daily':
-        return new Date(now.setDate(now.getDate() + 1));
-      case 'weekly':
-        return new Date(now.setDate(now.getDate() + 7));
       case 'monthly':
         return new Date(now.setMonth(now.getMonth() + 1));
+      case 'yearly':
+        return new Date(now.setFullYear(now.getFullYear() + 1));
       default:
-        return new Date(now.setDate(now.getDate() + 1));
+        return new Date(now.setMonth(now.getMonth() + 1));
     }
   }
 }

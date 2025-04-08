@@ -70,25 +70,44 @@ const AdminDashboardContent = ({ stats, loading }: { stats: AdminStats | null, l
   if (loading || !stats) {
     return <CircularProgress />;
   }
+  
+  // Log stats data to console for debugging
+  console.log('Admin dashboard stats:', stats);
+  
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} sm={6} md={4}>
-        <StatCard title="Total Users" value={stats.userCount} icon={PeopleIcon} />
+      <Grid item xs={12} sm={6} md={3}>
+        <StatCard 
+          title="Total Users" 
+          value={stats.userCount} 
+          icon={PeopleIcon} 
+        />
       </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <StatCard title="Total Devices" value={stats.deviceCount} icon={DevicesIcon} />
+      <Grid item xs={12} sm={6} md={3}>
+        <StatCard 
+          title="Active Devices" 
+          value={stats.deviceCount} 
+          icon={DevicesIcon} 
+        />
       </Grid>
-      <Grid item xs={12} sm={6} md={4}>
+      <Grid item xs={12} sm={6} md={3}>
         <StatCard
-          title="Active Rentals"
+          title="Active Subscriptions"
           value={stats.rentalCount}
+          icon={SubscriptionsIcon}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6} md={3}>
+        <StatCard
+          title="Monthly Revenue"
+          value={`$${stats.deviceCount * 1000}`}
           icon={SubscriptionsIcon}
         />
       </Grid>
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 400 }}>
           <Typography variant="h6" gutterBottom>
-            Platform Overview (Sample Data)
+            Platform Overview
           </Typography>
           <Box sx={{ flexGrow: 1, width: '100%' }}>
             <BarChart
@@ -158,25 +177,55 @@ const Dashboard = () => {
 
       try {
         if (user.role === 'admin') {
+          // Add debug logging
+          console.log('Fetching admin dashboard data...');
+
           const [usersRes, devicesRes, rentalsRes] = await Promise.all([
             axios.get('http://localhost:3001/api/users'),
             axios.get('http://localhost:3001/api/devices'),
             axios.get('http://localhost:3001/api/rentals')
           ]);
+
+          console.log('API responses:', { users: usersRes.data, devices: devicesRes.data, rentals: rentalsRes.data });
+
+          // Check for arrays in the response data structure
+          const usersData = Array.isArray(usersRes.data.data) ? usersRes.data.data : 
+                           (usersRes.data.data?.users ? usersRes.data.data.users : []);
+          
+          const devicesData = Array.isArray(devicesRes.data.data) ? devicesRes.data.data :
+                             (devicesRes.data.data?.devices ? devicesRes.data.data.devices : []);
+          
+          const rentalsData = Array.isArray(rentalsRes.data.data) ? rentalsRes.data.data :
+                             (rentalsRes.data.data?.rentals ? rentalsRes.data.data.rentals : []);
+          
           setAdminStats({
-            userCount: usersRes.data?.data?.length ?? 0,
-            deviceCount: devicesRes.data?.data?.length ?? 0,
-            rentalCount: rentalsRes.data?.data?.length ?? 0,
+            userCount: usersData.length || 0,
+            deviceCount: devicesData.length || 0,
+            rentalCount: rentalsData.length || 0,
+          });
+
+          console.log('Processed counts:', { 
+            users: usersData.length, 
+            devices: devicesData.length, 
+            rentals: rentalsData.length 
           });
         } else if (user.role === 'client') {
           const [myRentalsRes, availableDevicesRes] = await Promise.all([
             axios.get('http://localhost:3001/api/rentals/me'),
             axios.get('http://localhost:3001/api/devices?status=available')
           ]);
-           setClientData({
-             activeRentals: myRentalsRes.data?.data?.length ?? 0,
-             availableDevices: availableDevicesRes.data?.data?.length ?? 0,
-           });
+
+          // Check for arrays in the response data structure
+          const myRentalsData = Array.isArray(myRentalsRes.data.data) ? myRentalsRes.data.data : 
+                               (myRentalsRes.data.data?.rentals ? myRentalsRes.data.data.rentals : []);
+          
+          const availableDevicesData = Array.isArray(availableDevicesRes.data.data) ? availableDevicesRes.data.data :
+                                      (availableDevicesRes.data.data?.devices ? availableDevicesRes.data.data.devices : []);
+
+          setClientData({
+            activeRentals: myRentalsData.length || 0,
+            availableDevices: availableDevicesData.length || 0,
+          });
         }
       } catch (err: any) {
         console.error("Dashboard fetch error:", err);

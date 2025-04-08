@@ -17,7 +17,7 @@ import { useAuth } from '../contexts/AuthContext';
 import api from '../config/api';
 
 interface Plan {
-  type: 'daily' | 'weekly' | 'monthly';
+  type: 'monthly' | 'yearly';
   price: number;
   features: string[];
 }
@@ -35,36 +35,29 @@ interface Device {
 
 const plans: Plan[] = [
   {
-    type: 'daily',
-    price: 9.99,
-    features: [
-      '24-hour access',
-      'Basic support',
-      'Single device',
-      'Standard features'
-    ]
-  },
-  {
-    type: 'weekly',
-    price: 49.99,
-    features: [
-      '7-day access',
-      'Priority support',
-      'Up to 3 devices',
-      'Advanced features',
-      'Usage analytics'
-    ]
-  },
-  {
     type: 'monthly',
-    price: 149.99,
+    price: 1000,
     features: [
       '30-day access',
+      '24/7 Support',
+      'One device included',
+      'Latest Meta Quest headset',
+      'Software updates',
+      'Basic training'
+    ]
+  },
+  {
+    type: 'yearly',
+    price: 10000,
+    features: [
+      '365-day access',
       '24/7 Premium support',
-      'Unlimited devices',
-      'All features included',
-      'Advanced analytics',
-      'Custom solutions'
+      'One device included',
+      'Latest Meta Quest headset',
+      'Priority software updates',
+      'Advanced training sessions',
+      'Free device maintenance',
+      '16.7% discount compared to monthly plan'
     ]
   }
 ];
@@ -123,14 +116,17 @@ const SubscriptionPlans: React.FC = () => {
 
       <Grid container spacing={3}>
         {plans.map((plan) => (
-          <Grid item xs={12} md={4} key={plan.type}>
+          <Grid item xs={12} md={6} key={plan.type}>
             <Card sx={{ height: '100%' }}>
               <CardContent>
                 <Typography variant="h5" gutterBottom>
                   {plan.type.charAt(0).toUpperCase() + plan.type.slice(1)} Plan
                 </Typography>
                 <Typography variant="h4" color="primary" gutterBottom>
-                  ${plan.price}
+                  {plan.price} AED
+                </Typography>
+                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                  per device
                 </Typography>
                 <Box sx={{ mt: 2 }}>
                   {plan.features.map((feature, index) => (
@@ -162,7 +158,7 @@ const SubscriptionPlans: React.FC = () => {
             </Typography>
           )}
           <Typography>
-            Are you sure you want to subscribe to the {selectedPlan?.type} plan for ${selectedPlan?.price}?
+            Are you sure you want to subscribe to the {selectedPlan?.type} plan for {selectedPlan?.price} AED per device?
           </Typography>
         </DialogContent>
         <DialogActions>
