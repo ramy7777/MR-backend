@@ -30,13 +30,13 @@ export class AuthService {
     const userCount = await this.userRepository.count();
     const isFirstUser = userCount === 0;
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = this.userRepository.create({
       email,
-      passwordHash,
+      password: hashedPassword,
       name,
       status: 'active',
-      role: isFirstUser ? 'admin' : 'user' // First user gets admin role
+      role: isFirstUser ? 'admin' : 'user'
     });
 
     await this.userRepository.save(user);
@@ -64,7 +64,7 @@ export class AuthService {
       throw new AppError(401, 'Invalid credentials');
     }
 
-    const isValidPassword = await bcrypt.compare(password, user.passwordHash);
+    const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       logger.warn('Login failed - invalid password:', { email });
       throw new AppError(401, 'Invalid credentials');
@@ -73,19 +73,6 @@ export class AuthService {
     logger.info('User logged in successfully:', { id: user.id, email: user.email, role: user.role });
     const tokens = this.generateAuthTokens(user);
     
-    // Log the generated tokens and user data
-    logger.info('Generated tokens and user data:', { 
-      userId: user.id,
-      userEmail: user.email,
-      userRole: user.role,
-      tokenPayload: {
-        userId: user.id,
-        email: user.email,
-        role: user.role
-      }
-    });
-
-    // Return a clean user object with only the necessary fields
     return {
       user: {
         id: user.id,
@@ -103,8 +90,6 @@ export class AuthService {
       email: user.email,
       role: user.role
     };
-
-    logger.info('Generating tokens with payload:', payload);
 
     return {
       accessToken: generateToken(payload),

@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Paper,
   Typography,
   Box,
+  CircularProgress,
 } from '@mui/material';
 import {
   People as PeopleIcon,
   Devices as DevicesIcon,
   Subscriptions as SubscriptionsIcon,
-  TrendingUp as TrendingUpIcon,
+  Inventory as InventoryIcon,
 } from '@mui/icons-material';
 import {
   BarChart,
@@ -20,69 +21,80 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
+import { useAuth } from '../contexts/AuthContext';
+import axios from 'axios';
 
-const data = [
-  { name: 'Jan', Users: 4000, Devices: 2400, Subscriptions: 2400 },
-  { name: 'Feb', Users: 3000, Devices: 1398, Subscriptions: 2210 },
-  { name: 'Mar', Users: 2000, Devices: 9800, Subscriptions: 2290 },
-  { name: 'Apr', Users: 2780, Devices: 3908, Subscriptions: 2000 },
-  { name: 'May', Users: 1890, Devices: 4800, Subscriptions: 2181 },
-  { name: 'Jun', Users: 2390, Devices: 3800, Subscriptions: 2500 },
+const chartData = [
+  { name: 'Jan', Users: 40, Devices: 24, Rentals: 24 },
+  { name: 'Feb', Users: 30, Devices: 13, Rentals: 22 },
+  { name: 'Mar', Users: 20, Devices: 98, Rentals: 29 },
+  { name: 'Apr', Users: 27, Devices: 39, Rentals: 20 },
+  { name: 'May', Users: 18, Devices: 48, Rentals: 21 },
+  { name: 'Jun', Users: 23, Devices: 38, Rentals: 25 },
 ];
 
-const StatCard = ({ title, value, icon: Icon }: { title: string; value: string; icon: any }) => (
+interface AdminStats {
+  userCount: number;
+  deviceCount: number;
+  rentalCount: number;
+}
+
+interface ClientData {
+  activeRentals: number;
+  availableDevices: number;
+}
+
+const StatCard = ({ title, value, icon: Icon }: { title: string; value: string | number; icon: React.ElementType }) => (
   <Paper
     sx={{
       p: 2,
       display: 'flex',
       flexDirection: 'column',
       height: 140,
+      justifyContent: 'space-between',
     }}
   >
-    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-      <Icon sx={{ color: 'primary.main', mr: 1 }} />
-      <Typography color="textSecondary" variant="h6">
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+      <Icon sx={{ color: 'primary.main', mr: 1.5, fontSize: '2rem' }} />
+      <Typography color="text.secondary" sx={{ fontWeight: 'medium' }}> 
         {title}
       </Typography>
     </Box>
-    <Typography component="p" variant="h4">
+    <Typography component="p" variant="h4" sx={{ mb: 1 }}>
       {value}
-    </Typography>
-    <Typography color="textSecondary" sx={{ flex: 1 }}>
-      as of today
     </Typography>
   </Paper>
 );
 
-const Dashboard = () => {
+const AdminDashboardContent = ({ stats, loading }: { stats: AdminStats | null, loading: boolean }) => {
+  if (loading || !stats) {
+    return <CircularProgress />;
+  }
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={3}>
-          <StatCard title="Total Users" value="2,300" icon={PeopleIcon} />
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <StatCard title="Active Devices" value="1,200" icon={DevicesIcon} />
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <StatCard
-            title="Active Subscriptions"
-            value="850"
-            icon={SubscriptionsIcon}
-          />
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <StatCard title="Monthly Revenue" value="$45,000" icon={TrendingUpIcon} />
-        </Grid>
-        <Grid item xs={12}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Platform Overview
-            </Typography>
+    <Grid container spacing={3}>
+      <Grid item xs={12} sm={6} md={4}>
+        <StatCard title="Total Users" value={stats.userCount} icon={PeopleIcon} />
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <StatCard title="Total Devices" value={stats.deviceCount} icon={DevicesIcon} />
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <StatCard
+          title="Active Rentals"
+          value={stats.rentalCount}
+          icon={SubscriptionsIcon}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 400 }}>
+          <Typography variant="h6" gutterBottom>
+            Platform Overview (Sample Data)
+          </Typography>
+          <Box sx={{ flexGrow: 1, width: '100%' }}>
             <BarChart
-              width={1000}
+              width={700}
               height={300}
-              data={data}
+              data={chartData}
               margin={{
                 top: 5,
                 right: 30,
@@ -95,13 +107,105 @@ const Dashboard = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="Users" fill="#8884d8" />
-              <Bar dataKey="Devices" fill="#82ca9d" />
-              <Bar dataKey="Subscriptions" fill="#ffc658" />
+              <Bar dataKey="Users" fill="#8884d8" name="Users" />
+              <Bar dataKey="Devices" fill="#82ca9d" name="Devices" />
+              <Bar dataKey="Rentals" fill="#ffc658" name="Rentals" />
             </BarChart>
-          </Paper>
-        </Grid>
+          </Box>
+        </Paper>
       </Grid>
+    </Grid>
+  );
+};
+
+const ClientDashboardContent = ({ clientData, loading, userName }: { clientData: ClientData | null, loading: boolean, userName: string }) => {
+  if (loading || !clientData) {
+    return <CircularProgress />;
+  }
+  return (
+     <Box>
+        <Typography variant="h5" gutterBottom>
+          Welcome, {userName}!
+        </Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
+            <StatCard title="Your Active Rentals" value={clientData.activeRentals} icon={SubscriptionsIcon} />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <StatCard title="Headsets Available for Rent" value={clientData.availableDevices} icon={InventoryIcon} />
+          </Grid>
+        </Grid>
+     </Box>
+  );
+};
+
+const Dashboard = () => {
+  const { user } = useAuth();
+  const [adminStats, setAdminStats] = useState<AdminStats | null>(null);
+  const [clientData, setClientData] = useState<ClientData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        if (user.role === 'admin') {
+          const [usersRes, devicesRes, rentalsRes] = await Promise.all([
+            axios.get('http://localhost:3001/api/users'),
+            axios.get('http://localhost:3001/api/devices'),
+            axios.get('http://localhost:3001/api/rentals')
+          ]);
+          setAdminStats({
+            userCount: usersRes.data?.data?.length ?? 0,
+            deviceCount: devicesRes.data?.data?.length ?? 0,
+            rentalCount: rentalsRes.data?.data?.length ?? 0,
+          });
+        } else if (user.role === 'client') {
+          const [myRentalsRes, availableDevicesRes] = await Promise.all([
+            axios.get('http://localhost:3001/api/rentals/me'),
+            axios.get('http://localhost:3001/api/devices?status=available')
+          ]);
+           setClientData({
+             activeRentals: myRentalsRes.data?.data?.length ?? 0,
+             availableDevices: availableDevicesRes.data?.data?.length ?? 0,
+           });
+        }
+      } catch (err: any) {
+        console.error("Dashboard fetch error:", err);
+        setError(err.response?.data?.message || 'Failed to fetch dashboard data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [user]);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return <Typography color="error">Error: {error}</Typography>;
+  }
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      {user?.role === 'admin' && <AdminDashboardContent stats={adminStats} loading={loading}/>}
+      {user?.role === 'client' && <ClientDashboardContent clientData={clientData} loading={loading} userName={user.name}/>}
+      {!user && <Typography>Please log in.</Typography>}
     </Box>
   );
 };
